@@ -1,3 +1,4 @@
+import datetime
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Project
@@ -17,6 +18,7 @@ def create_project():
         owner_id=current_user_id,
         cohort_id=data.get("cohort_id"),
         tech_id=data.get("tech_id"),
+        created_at=datetime.datetime.utcnow("created_at")
     )
     db.session.add(new_project)
     db.session.commit()

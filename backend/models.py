@@ -58,7 +58,6 @@ class Project(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     github_link = db.Column(db.Text, nullable=False)
-
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)
     tech_id = db.Column(db.Integer, db.ForeignKey('techs.id'), nullable=True)
