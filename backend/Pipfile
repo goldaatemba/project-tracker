@@ -12,6 +12,8 @@ werkzeug = "*"
 flask-cors = "*"
 psycopg2-binary = "*"
 gunicorn = "*"
+migrate = "*"
+flask-migrate = "*"
 
 [dev-packages]
 
