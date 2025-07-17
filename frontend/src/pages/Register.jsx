@@ -1,20 +1,47 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Register() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [agree, setAgree] = useState(false)
+  const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (!agree) {
       alert("You must agree to terms and conditions.")
       return
     }
-    console.log({ name, email, password })
-    // Perform login/signup logic
+
+    try {
+      const response = await fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // ✅ For JWT cookie
+        body: JSON.stringify({
+          username: name,
+          email,
+          password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        alert("Registration successful! Redirecting...")
+        console.log(data)
+        navigate('/') // ✅ Redirect after register
+      } else {
+        alert(data.error || "Registration failed.")
+      }
+    } catch (error) {
+      console.error("Registration error:", error)
+      alert("An error occurred while registering.")
+    }
   }
 
   return (
@@ -90,10 +117,9 @@ function Register() {
       </div>
 
       {/* Footer link */}
-       <p className="mt-6 text-sm text-black">
-  Already have an account? <Link to="/login" className="font-semibold underline">Login</Link>
-</p>
-     
+      <p className="mt-6 text-sm text-black">
+        Already have an account? <Link to="/login" className="font-semibold underline">Login</Link>
+      </p>
     </div>
   )
 }

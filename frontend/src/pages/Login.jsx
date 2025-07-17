@@ -1,21 +1,44 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
+  const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log({ email, password, remember })
-    // Add your login logic here
+  
+    try {
+      const response = await fetch(`http://localhost:5000/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', 
+        body: JSON.stringify({ email, password }),
+      })
+  
+      if (!response.ok) {
+        throw new Error('Login failed')
+      }
+
+      const data = await response.json()
+      console.log('Logged in:', data)
+
+      navigate('/') 
+
+    } catch (err) {
+      console.error(err)
+      alert('Login failed: ' + err.message)
+    }
   }
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-200 px-4 py-8">
       <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl">
-        
+
         {/* Left Side: Form */}
         <div className="w-full md:w-1/2 p-8 bg-blue-100">
           <h2 className="text-2xl font-bold mb-6 text-black text-center">Welcome Back</h2>
@@ -68,7 +91,7 @@ function Login() {
         {/* Right Side: Image */}
         <div className="w-full md:w-1/2 bg-[#4F9CF9] flex items-center justify-center p-4">
           <img
-            src="/project1.png" // Replace with your actual public image path
+            src="/project1.png"
             alt="Illustration"
             className="max-w-full h-auto rounded-md"
           />
