@@ -32,7 +32,7 @@ function Projects() {
           }}
         >
           <h1 className="text-3xl md:text-4xl font-extrabold text-[#043873] text-center mb-4">
-            🚀 Explore Student Projects
+             Explore Student Projects
           </h1>
           <p className="text-center text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
             Browse innovative projects built by Moringa School students across various cohorts. Tap into their creativity, stack choices, and execution!

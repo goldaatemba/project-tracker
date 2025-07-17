@@ -1,9 +1,18 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import heroImg from "/hero-graphic.png"; // Replace with your actual image
-import featuredImg from "/heroImg.jpg"; // Replace or duplicate for others
+import heroImg from "/hero-graphic.png";
 
 function Home() {
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/projects?featured=true&_limit=3")
+      .then((res) => res.json())
+      .then((data) => setFeaturedProjects(data))
+      .catch((err) => console.error("Error fetching projects:", err));
+  }, []);
+
   return (
     <section className="bg-white text-gray-800">
       {/* Hero Section */}
@@ -13,7 +22,7 @@ function Home() {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#4F9CF9] leading-tight">
+          <h1 className="text-4xl rounded-xl md:text-5xl font-bold mb-6 text-[#4F9CF9] leading-tight">
             Explore Moringa Projects
           </h1>
           <p className="text-lg text-gray-700 mb-6">
@@ -49,41 +58,52 @@ function Home() {
         </motion.div>
       </div>
 
-      {/* Featured Projects */}
+      {/* //featured projects */}
       <div className="bg-gray-100 py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-[#4F9CF9] mb-10">
             Featured Projects
           </h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <motion.div
-                key={i}
-                whileHover={{ scale: 1.03 }}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-              >
-                
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-[#4F9CF9]">
-                    Project Title {i}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-2">
-                    A short summary of what this project does and the tech stack used.
-                  </p>
-                  <Link
-                    to={`/projects/${i}`}
-                    className="inline-block mt-4 text-sm text-[#4F9CF9] hover:underline"
-                  >
-                    View Details →
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {featuredProjects.length === 0 ? (
+            <p className="text-center text-gray-600">No featured projects available.</p>
+          ) : (
+            <div className="grid gap-8 md:grid-cols-3">
+              {featuredProjects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  whileHover={{ scale: 1.03 }}
+                  className="bg-white rounded-lg shadow-md overflow-hidden"
+                >
+                  
+                  <div className="p-4 flex flex-col justify-between h-full">
+  <div>
+    <h2 className="text-xl font-semibold text-[#043873]">{project.name}</h2>
+    <p className="text-sm text-gray-700 mb-2">
+      {project.description.slice(0, 50)}...
+    </p>
+  </div>
+
+  <div className="flex justify-between items-center mt-4">
+    <p className="text-sm text-gray-700">
+      <strong>By</strong> {project.author}
+    </p>
+    <Link
+      to={`/projects/${project.id}`}
+      className="text-sm text-[#4F9CF9] hover:underline"
+    >
+      View Details →
+    </Link>
+  </div>
+</div>
+
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Admin Note (optional) */}
+      {/* Admin Note */}
       <div className="bg-[#4F9CF9] text-white text-center py-6 mt-10">
         <p className="text-md">
           Are you an admin?{" "}
