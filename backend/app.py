@@ -17,7 +17,7 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 # flask cors
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 # Mail configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -34,6 +34,9 @@ mail = Mail(app)
 app.config["JWT_SECRET_KEY"] = "sjusefvyilgfvksbhvfiknhalvufn"  
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 app.config["JWT_VERIFY_SUB"] = False
+app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+app.config["JWT_COOKIE_SECURE"] = False  # True only in production with HTTPS
+app.config["JWT_COOKIE_CSRF_PROTECT"] = False  # Set True for CSRF protection
 
 jwt = JWTManager(app)
 jwt.init_app(app)

@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import MetaData
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 metadata = MetaData()
 db = SQLAlchemy(metadata=metadata)
@@ -30,7 +32,11 @@ class User(db.Model):
     owned_projects = db.relationship('Project', backref='owner', lazy=True)
     memberships = db.relationship('Member', backref='user', lazy=True)
 
+    def set_password(self, plain_password):
+        self.password = generate_password_hash(plain_password)
 
+    def check_password(self, plain_password):
+        return check_password_hash(self.password, plain_password)
 
 class Cohort(db.Model):
     __tablename__ = 'cohorts'

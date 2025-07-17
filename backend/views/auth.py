@@ -4,32 +4,41 @@ from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from datetime import datetime
 from datetime import timezone
+from flask_cors import cross_origin
 
 
 auth_bp = Blueprint("auth_bp", __name__)
 
 
 
-# login
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.route('/login', methods=['POST', 'OPTIONS'])
+@cross_origin(supports_credentials=True)
 def login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    if request.method == 'OPTIONS':
+        return '', 204
 
-    if not email or not password:
-        return jsonify({"error": "email and password are required to login"}), 400
-     
-    user = User.query.filter_by(email=email).first()
-    print("xxxx ",user)
-    if user and user.is_blocked:
-        return jsonify({"error":"You have been blocked! Contact Admin!"}), 401
+    try:
+        data = request.get_json(force=True)
+        print("📥 Received data:", data)
 
-    if user and check_password_hash(user.password, password):
-        access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token)     
+        email = data.get('email')
+        password = data.get('password')
 
-    else:
-        return jsonify({"error": "User does not exists/wrong details"}), 400
+        if not email or not password:
+            return jsonify({'error': 'Missing credentials'}), 400
+
+        # Dummy example: replace with actual query
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.check_password(password):  # Assuming hashed check
+            access_token = create_access_token(identity=user.id)
+            return jsonify({'access_token': access_token}), 200
+        else:
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+    except Exception as e:
+        print("❌ Error:", e)
+        return jsonify({'error': 'Invalid JSON or server error'}), 400
 
     
 #  fetching logged in user
