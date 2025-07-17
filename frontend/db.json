@@ -1,0 +1,59 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "AgriConnect",
+      "description": "Connects farmers to buyers and market data for smarter agriculture.",
+      "stack": "Full-stack",
+      "created": "2025-06-15",
+      "github": "https://github.com/example/agriconnect",
+      "author": "User001",
+      "members": ["Alice", "Bob"],
+      "cohort": "Cohort 12"
+    },
+    {
+      "id": 2,
+      "name": "MobiCare",
+      "description": "Mobile health tracking app focused on patient engagement and real-time vitals.",
+      "stack": "Android",
+      "created": "2025-06-20",
+      "github": "https://github.com/example/mobicare",
+      "author": "User002",
+      "members": ["Sam", "Lena"],
+      "cohort": "Cohort 13"
+    },
+    {
+      "id": 3,
+      "name": "SkillHub",
+      "description": "A learning platform for tech students to access curated content and peer support.",
+      "stack": "Full-stack",
+      "created": "2025-06-25",
+      "github": "https://github.com/example/skillhub",
+      "author": "User003",
+      "members": ["Tina", "Mohamed"],
+      "cohort": "Cohort 12"
+    },
+    {
+      "id": 4,
+      "name": "EventEase",
+      "description": "Event booking system tailored for schools and community centers.",
+      "stack": "Full-stack",
+      "created": "2025-06-28",
+      "github": "https://github.com/example/eventease",
+      "author": "User004",
+      "members": ["Rose", "Ken"],
+      "cohort": "Cohort 14"
+    },
+    {
+      "id": 5,
+      "name": "CareAlert",
+      "description": "An alert system for caregivers of the elderly with real-time location tracking.",
+      "stack": "Android",
+      "created": "2025-07-01",
+      "github": "https://github.com/example/carealert",
+      "author": "User005",
+      "members": ["Ali", "Joy"],
+      "cohort": "Cohort 15"
+    }
+  ]
+}
