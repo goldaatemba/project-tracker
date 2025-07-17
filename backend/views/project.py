@@ -18,7 +18,7 @@ def create_project():
         owner_id=current_user_id,
         cohort_id=data.get("cohort_id"),
         tech_id=data.get("tech_id"),
-        created_at=datetime.datetime.utcnow("created_at")
+        created_at=datetime.datetime.utcnow()
     )
     db.session.add(new_project)
     db.session.commit()
