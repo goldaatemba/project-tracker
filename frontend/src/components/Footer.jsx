@@ -42,7 +42,7 @@ function Footer() {
           <h3 className="text-lg font-semibold mb-2">Connect</h3>
           <p className="text-sm text-gray-300">© 2025 Moringa School. All rights reserved.</p>
           <p className="text-sm text-gray-300 mt-2">
-            Built by <span className="text-[#FFE602] font-medium">Moringa Students</span>
+            Built by <span className="text-[#FFE602] font-medium">Moringa @2025 Students</span>
           </p>
         </div>
       </div>
