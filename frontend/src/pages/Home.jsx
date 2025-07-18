@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImg from "/hero-graphic.png";
+import config from "../config"; 
 
 function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/projects?featured=true&_limit=3")
+    fetch(`${config.API_BASE_URL}/projects?featured=true&_limit=3`)
       .then((res) => res.json())
       .then((data) => setFeaturedProjects(data))
       .catch((err) => console.error("Error fetching projects:", err));
