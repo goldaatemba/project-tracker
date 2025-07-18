@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from models import db, Member
+from ..models import db, Member
 
 member_bp = Blueprint("member_bp", __name__)
 

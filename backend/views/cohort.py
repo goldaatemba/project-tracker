@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
-from models import db, Cohort
+from ..models import db, Cohort
 
 cohort_bp = Blueprint("cohort_bp", __name__)
 

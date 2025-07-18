@@ -1,61 +1,82 @@
+from flask import Flask
+from dotenv import load_dotenv
 from datetime import timedelta
-from flask import Flask, request, jsonify
-from models import db, TokenBlocklist
-from flask_migrate import Migrate
-from flask_mail import Mail
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
+from .config import Config 
+import os
+from .extensions import db, migrate, mail, jwt, oauth, cors
 
-app = Flask(__name__)
+load_dotenv()
 
-# Use SQLite instead of PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project_tracking.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+def create_app():
+    app = Flask(__name__)
+    
+    app.config.from_object(Config)
+    print("GOOGLE_CLIENT_ID:", os.getenv("GOOGLE_CLIENT_ID"))
+    print("GOOGLE_CLIENT_SECRET:", os.getenv("GOOGLE_CLIENT_SECRET"))
 
-# Initialize database and migration
-migrate = Migrate(app, db)
-db.init_app(app)
 
-# flask cors
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+    # Configuration
+    app.config.update({
+        'SQLALCHEMY_DATABASE_URI': os.getenv('DATABASE_URL', 'sqlite:///project.db'),
+        'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+        'JWT_SECRET_KEY': os.getenv('JWT_SECRET', 'fallback-secret'),
+        'JWT_ACCESS_TOKEN_EXPIRES': timedelta(hours=24),
+        'JWT_TOKEN_LOCATION': ['cookies'],
+        'JWT_COOKIE_SECURE': False,
+        'JWT_COOKIE_SAMESITE': 'Lax',
+        'MAIL_SERVER': 'smtp.gmail.com',
+        'MAIL_PORT': 587,
+        'MAIL_USE_TLS': True,
+        'GOOGLE_CLIENT_ID': os.getenv('GOOGLE_CLIENT_ID'),
+        'GOOGLE_CLIENT_SECRET': os.getenv('GOOGLE_CLIENT_SECRET'),
+        'MAIL_USERNAME': os.getenv('MAIL_USER'),
+        'SECRET_KEY': os.getenv('FLASK_SECRET', '5bfe3c2d1d9b4e5e9f3a2b7b1c7d8432a1d6f7e4a9c8d2b5e7f9a1b3c4d6e8f0'), 
+        'MAIL_PASSWORD': os.getenv('MAIL_PASSWORD')
+        
+    })
 
-# Mail configuration
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'goldaatemba76@gmail.com'
-app.config['MAIL_PASSWORD'] = 'iwra vjbu ylzn vluq' 
-app.config['MAIL_DEFAULT_SENDER'] = 'goldaatemba76@gmail.com'
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    mail.init_app(app)
+    jwt.init_app(app)
+    oauth.init_app(app)
+    cors.init_app(app, supports_credentials=True, resources={
+        r"/*": {
+            "origins": ["http://localhost:5173"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
 
-mail = Mail(app)
+    oauth.register(
+    name='google',
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+    access_token_url='https://oauth2.googleapis.com/token',
+    access_token_params=None,
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
+    client_kwargs={'scope': 'openid email profile'}
+)
 
-# JWT configuration
-app.config["JWT_SECRET_KEY"] = "sjusefvyilgfvksbhvfiknhalvufn"  
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
-app.config["JWT_VERIFY_SUB"] = False
-app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-app.config["JWT_COOKIE_SECURE"] = False  # True only in production with HTTPS
-app.config["JWT_COOKIE_CSRF_PROTECT"] = False  # Set True for CSRF protection
+    # Register blueprints (lazy import)
+    with app.app_context():
+        from .views.auth import auth_bp
+        from .views.user import user_bp
+        from .views.cohort import cohort_bp
+        from .views.member import member_bp
+        from .views.project import project_bp
+        from .views.tech import tech_bp
+        
+        app.register_blueprint(auth_bp)
+        app.register_blueprint(user_bp)
+        app.register_blueprint(cohort_bp)
+        app.register_blueprint(member_bp)
+        app.register_blueprint(project_bp)
+        app.register_blueprint(tech_bp)
 
-jwt = JWTManager(app)
-jwt.init_app(app)
-
-# Register Blueprints
-from views import *
-app.register_blueprint(auth_bp)
-app.register_blueprint(user_bp)
-app.register_blueprint(cohort_bp)
-app.register_blueprint(project_bp)
-app.register_blueprint(member_bp)
-app.register_blueprint(tech_bp)
-
-# JWT blocklist check
-@jwt.token_in_blocklist_loader
-def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
-    jti = jwt_payload["jti"]
-    token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
-    return token is not None
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return app

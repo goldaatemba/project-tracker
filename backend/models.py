@@ -2,10 +2,10 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import MetaData
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from backend.extensions import db
 
 metadata = MetaData()
-db = SQLAlchemy(metadata=metadata)
+
 
 
 class TokenBlocklist(db.Model):
@@ -37,6 +37,13 @@ class User(db.Model):
 
     def check_password(self, plain_password):
         return check_password_hash(self.password, plain_password)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'username': self.username
+        }
 
 class Cohort(db.Model):
     __tablename__ = 'cohorts'

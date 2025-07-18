@@ -11,9 +11,11 @@ flask-cors = "*"
 flask-jwt-extended = "*"
 flask-migrate = "*"
 flask-sqlalchemy = "*"
-python-dotenv = "*"
 flask = "*"
 flask-mail = "*"
+authlib = "*"
+requests = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

@@ -1,14 +1,13 @@
-# for adding admin alone
 from models import User, db
-from app import app
-from werkzeug.security import generate_password_hash
+from app import create_app
+
+app = create_app()
 
 def seed():
     with app.app_context():
-        username="admin"
-        
-        email="admin@gmail.com"
-        password="admin"
+        username = "admin"
+        email = "admin@gmail.com"
+        password = "admin"
 
         username_exists = User.query.filter_by(username=username).first()
         if username_exists:
@@ -19,9 +18,12 @@ def seed():
         if email_exists:
             print("Email already exists.")
             return
-        new_admin = User( username=username, email=email, password=generate_password_hash(password), is_admin=True)
+
+        new_admin = User(username=username, email=email, is_admin=True)
+        new_admin.set_password(password)
+
         db.session.add(new_admin)
         db.session.commit()
-        print("Admin added  successfully.")
+        print("Admin added successfully.")
 
 seed()
