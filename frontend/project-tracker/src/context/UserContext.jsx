@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
   console.log("Current User state variable:", currentUser);
 
   // ========= Register User =========
-  function register_user(username, email, password, department) {
+  function register_user(username, email, password) {
     toast.loading("Registering user...");
 
     fetch(`${api_url}/users`, {
@@ -42,7 +42,7 @@ export const UserProvider = ({ children }) => {
   }
 
   // ========= Login User =========
-  function login_user(email, password, redirect = "/access") {
+  function login_user(email, password, redirect = "/project") {
     toast.loading("Logging you in...");
 
     fetch(`${api_url}/login`, {

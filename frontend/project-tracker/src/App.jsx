@@ -12,14 +12,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Users from './pages/Users';
-import Access from './pages/Project';
-import SingleAccess from './pages/SingleProject';
-import AddAccess from './pages/AddProject';
+import Project from './pages/Project';
+import SingleProject from './pages/SingleProject';
+import AddProject from './pages/AddProject';
 
 // Layout and Context
 import Layout from './components/Layout';
 import { UserProvider } from './context/UserContext';
-import { AccessProvider } from './context/ProjectContext';
+import { ProjectProvider } from './context/ProjectContext';
 
 function App() {
   return (
@@ -44,8 +44,8 @@ function App() {
               <Route path="users" element={<Users />} />
 
               {/* Project Management */}
-              <Route path="projects" element={<Project />} />
-              <Route path="projects/:id" element={<SingleProject />} />
+              <Route path="project" element={<Project />} />
+              <Route path="project/:id" element={<SingleProject />} />
               <Route path="addproject" element={<AddProject />} />
             </Route>
           </Routes>
@@ -56,5 +56,3 @@ function App() {
 }
 
 export default App;
-
-
