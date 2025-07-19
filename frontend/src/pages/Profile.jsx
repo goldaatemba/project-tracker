@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LogOut, Pencil } from 'lucide-react';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token'); // Get JWT from localStorage
-  
+    const token = localStorage.getItem('access_token');
+
     if (!token) {
       console.error("No token found");
       return;
     }
-  
+
     fetch('http://localhost:5000/me', {
       method: "GET",
       headers: {
@@ -19,60 +22,97 @@ const Profile = () => {
       }
     })
       .then(res => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch user");
-        }
+        if (!res.ok) throw new Error("Failed to fetch user");
         return res.json();
       })
       .then(data => setUser(data))
       .catch(err => console.error("Fetch error:", err));
   }, []);
-  
-  
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    navigate('/login');
+  };
+
+  const goToEditProfile = () => {
+    navigate('/edit-profile');
+  };
 
   if (!user) return <div className="text-center mt-10 text-lg">Loading...</div>;
 
   return (
-    <section className="w-full overflow-hidden dark:bg-gray-900 text-gray-800 dark:text-white">
-      <div className="flex flex-col">
-        { /* Cover image */ }
-        <img src="/cover.jpg" alt="Cover" className="w-full h-64 object-cover" />
-
-        <div className="w-11/12 mx-auto -mt-20 flex items-center gap-4">
+    <section className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white py-10">
+      <div className="w-full max-w-5xl mx-auto flex flex-col">
+        {/* Cover Image */}
+        <div className="relative">
           <img
-            src="/default-avatar.png"
-            alt="Avatar"
-            className="rounded-md w-28 h-28 outline outline-2 outline-offset-2 outline-blue-500"
+            src="/cover.jpg"
+            alt="Cover"
+            className="w-full h-64 object-cover rounded-lg shadow-md"
           />
-          <h1 className="text-3xl font-semibold">{user.username}</h1>
+          <div className="absolute -bottom-12 left-8 flex items-center gap-4">
+            <img
+              src="/default-avatar.png"
+              alt="Avatar"
+              className="rounded-lg w-28 h-28 border-4 border-white dark:border-gray-900 shadow-lg"
+            />
+            <div>
+              <h1 className="text-3xl font-bold">{user.username}</h1>
+              <div className="mt-2 flex gap-3">
+                <button
+                  onClick={goToEditProfile}
+                  className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm transition"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm transition"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="w-11/12 mx-auto mt-6 grid md:grid-cols-2 gap-6">
-          <div>
-            <h2 className="text-lg font-medium mb-1">Email</h2>
-            <p className="text-gray-600 dark:text-gray-300">{user.email}</p>
-
-            <h2 className="text-lg font-medium mt-4 mb-1">Joined</h2>
-            <p className="text-gray-600 dark:text-gray-300">{new Date(user.created_at).toLocaleDateString()}</p>
-
-            <h2 className="text-lg font-medium mt-4 mb-1">Account Status</h2>
-            <p className="text-gray-600 dark:text-gray-300">
-              {user.is_blocked ? "Blocked" : "Active"}
-            </p>
+        {/* Info Grid */}
+        <div className="mt-24 grid md:grid-cols-2 gap-10 px-4 md:px-0">
+          {/* Account Info */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
+            <h2 className="text-xl font-semibold border-b pb-2">Account Info</h2>
+            <div>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
+              <p>{user.email}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Joined</p>
+              <p>{new Date(user.created_at).toLocaleDateString()}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Account Status</p>
+              <p className={user.is_blocked ? 'text-red-500 font-medium' : 'text-green-500 font-medium'}>
+                {user.is_blocked ? "Blocked" : "Active"}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h2 className="text-xl font-semibold mb-3">My Projects</h2>
+          {/* Projects */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
+            <h2 className="text-xl font-semibold border-b pb-2">My Projects</h2>
             {user.owned_projects?.length > 0 ? (
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="space-y-3">
                 {user.owned_projects.map(project => (
-                  <li key={project.id}>
-                    <span className="font-medium">{project.title}</span>: {project.description}
+                  <li key={project.id} className="border p-3 rounded-lg bg-gray-100 dark:bg-gray-700">
+                    <h3 className="font-semibold">{project.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>No owned projects yet.</p>
+              <p className="text-gray-500 italic">No owned projects yet.</p>
             )}
           </div>
         </div>

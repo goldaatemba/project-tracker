@@ -10,12 +10,15 @@ import Profile from './pages/Profile';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
+    
     <Routes>
       <Route element={<Layout />}>
       <Route path="/" element={<HomePage />} />
@@ -25,7 +28,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
-    
+    <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </>
   )
 }
