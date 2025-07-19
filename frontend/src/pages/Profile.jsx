@@ -3,16 +3,24 @@ import React, { useEffect, useState } from 'react';
 const Profile = () => {
   const [user, setUser] = useState(null);
 
-//   useEffect(() => {
-//     // Replace this with actual API call
-//     fetch('http://localhost:5000/api/me', {
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem("token")}`
-//       }
-//     })
-//       .then(res => res.json())
-//       .then(data => setUser(data));
-//   }, []);
+  useEffect(() => {
+    fetch('http://localhost:5000/me', {
+      method: "GET",
+      credentials: "include", // This is crucial when using cookies
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        return res.json();
+      })
+      .then(data => setUser(data))
+      .catch(err => console.error("Fetch error:", err));
+  }, []);
+  
 
   if (!user) return <div className="text-center mt-10 text-lg">Loading...</div>;
 
