@@ -19,7 +19,7 @@ function Footer() {
         <div>
           <h3 className="text-lg font-semibold mb-2">Moringa School</h3>
           <ul className="space-y-1 text-sm text-gray-300">
-            <li><a href="#" className="hover:underline">About Moringa</a></li>
+            <li><a href="/about" className="hover:underline">About Moringa</a></li>
             <li><a href="#" className="hover:underline">Courses</a></li>
             <li><a href="#" className="hover:underline">Career Support</a></li>
             <li><a href="#" className="hover:underline">Contact</a></li>

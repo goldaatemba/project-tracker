@@ -12,6 +12,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { AdminDashboard } from './pages/Admin';
+import About from './pages/About';
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,7 +28,9 @@ function App() {
       <Route path="*" element={<NoPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/about" element={<About />} />
       </Route>
     </Routes>
     <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
