@@ -57,7 +57,7 @@ const Profile = () => {
               className="rounded-lg w-28 h-28 border-4 border-white dark:border-gray-900 shadow-lg"
             />
             <div>
-              <h1 className="text-3xl font-bold">{user.username}</h1>
+              <h1 className="text-3xl text-white font-bold">{user.username}</h1>
               <div className="mt-2 flex gap-3">
                 <button
                   onClick={goToEditProfile}

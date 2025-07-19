@@ -14,6 +14,9 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { AdminDashboard } from './pages/Admin';
 import About from './pages/About';
+import Projects from './pages/Projects';
+import CohortProjects from './pages/Cohorts';
+import ProjectForm from './pages/AddProjects';
 
 
 function App() {
@@ -29,7 +32,10 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/projects" element={<Projects />} />
+      <Route path="/cohorts" element={<CohortProjects />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/addproject" element={<ProjectForm />} />
       <Route path="/about" element={<About />} />
       </Route>
     </Routes>
