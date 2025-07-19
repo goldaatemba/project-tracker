@@ -11,6 +11,9 @@ def create_project():
     data = request.get_json()
     current_user_id = get_jwt_identity()
 
+    if not data.get("name") or not data.get("description") or not data.get("github_link"):
+        return jsonify({"error": "Missing required fields"}), 400
+
     new_project = Project(
         name=data["name"],
         description=data["description"],
@@ -34,7 +37,8 @@ def get_project(id):
         "description": project.description,
         "github_link": project.github_link,
         "cohort_id": project.cohort_id,
-        "tech_id": project.tech_id
+        "tech_id": project.tech_id,
+        "owner_id": project.owner_id
     })
 
 
@@ -47,7 +51,8 @@ def get_all_projects():
             "description": p.description,
             "github_link": p.github_link,
             "cohort_id": p.cohort_id,
-            "tech_id": p.tech_id
+            "tech_id": p.tech_id,
+            "owner_id": p.owner_id
         } for p in Project.query.all()
     ])
 
@@ -56,7 +61,11 @@ def get_all_projects():
 @jwt_required()
 def update_project(id):
     data = request.get_json()
+    current_user_id = get_jwt_identity()
     project = Project.query.get_or_404(id)
+
+    if project.owner_id != current_user_id:
+        return jsonify({"error": "Unauthorized"}), 403
 
     project.name = data.get("name", project.name)
     project.description = data.get("description", project.description)
@@ -71,7 +80,12 @@ def update_project(id):
 @project_bp.route("/projects/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_project(id):
+    current_user_id = get_jwt_identity()
     project = Project.query.get_or_404(id)
+
+    if project.owner_id != current_user_id:
+        return jsonify({"error": "Unauthorized"}), 403
+
     db.session.delete(project)
     db.session.commit()
     return jsonify({"success": "Project deleted"}), 200
