@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Register() {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agree, setAgree] = useState(false);
@@ -10,106 +11,120 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!agree) {
-      alert("You must agree to terms and conditions.");
+      toast.warn("You must agree to the terms and conditions.");
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const res = await fetch('http://localhost:5000/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: name,
-          email,
-          password
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (response.ok) {
+      if (res.ok) {
         localStorage.setItem('access_token', data.access_token);
-        alert("Registration successful!");
-        navigate('/'); // Or navigate to dashboard/profile
+
+        const userRes = await fetch('http://localhost:5000/me', {
+          headers: {
+            Authorization: `Bearer ${data.access_token}`,
+          },
+        });
+
+        const userData = await userRes.json();
+
+        if (userRes.ok) {
+          toast.success('Registration successful!');
+          navigate('/');
+        } else {
+          toast.error('Could not fetch user info.');
+        }
+
       } else {
-        alert(data.error || "Registration failed.");
+        toast.error(data.error || 'Registration failed.');
       }
-    } catch (error) {
-      console.error("Registration error:", error);
-      alert("An error occurred while registering.");
+
+    } catch (err) {
+      console.error('Registration error:', err);
+      toast.error('Something went wrong. Please try again.');
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-200 px-4 py-8">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl">
-        <div className="w-full md:w-1/2 p-8 bg-blue-100">
-          <h2 className="text-2xl font-bold mb-6 text-black text-center">Get Started Now</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700">Name</label>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4 py-8">
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row w-full max-w-5xl">
+        <div className="w-full md:w-1/2 p-10 space-y-6">
+          <h2 className="text-3xl font-bold text-center text-blue-600">Create an Account</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium">Username</label>
               <input
                 type="text"
-                className="w-full mt-1 px-3 py-2 bg-gray-200 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
+                className="w-full mt-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-xl focus:ring-blue-500 focus:outline-none"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700">Email Address</label>
+            <div>
+              <label className="block text-sm font-medium">Email</label>
               <input
                 type="email"
-                className="w-full mt-1 px-3 py-2 bg-gray-200 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="w-full mt-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-xl focus:ring-blue-500 focus:outline-none"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700">Password</label>
+            <div>
+              <label className="block text-sm font-medium">Password</label>
               <input
                 type="password"
-                className="w-full mt-1 px-3 py-2 bg-gray-200 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="w-full mt-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-xl focus:ring-blue-500 focus:outline-none"
               />
             </div>
-            <div className="flex items-center mb-6">
+            <div className="flex items-center">
               <input
+                id="terms"
                 type="checkbox"
-                id="agree"
                 checked={agree}
                 onChange={(e) => setAgree(e.target.checked)}
-                className="h-5 w-5 text-blue-600 accent-black"
+                className="h-5 w-5 text-blue-600"
               />
-              <label htmlFor="agree" className="ml-2 text-sm text-black">
-                I agree to terms and conditions
+              <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
+                I agree to the <span className="underline">terms and conditions</span>
               </label>
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-[#FFE602] py-2 rounded hover:bg-blue-600 font-semibold"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl font-semibold"
             >
-              Signup
+              Register
             </button>
           </form>
+          <p className="text-sm text-center text-gray-600">
+            Already have an account?{' '}
+            <Link to="/login" className="text-blue-600 font-semibold underline">
+              Log in
+            </Link>
+          </p>
         </div>
-        <div className="w-full md:w-1/2 bg-[#4F9CF9] flex items-center justify-center rounded-l-lg-40 p-4">
+
+        <div className="w-full md:w-1/2 bg-[#4F9CF9] flex items-center justify-center p-6">
           <img
             src="/project1.png"
             alt="Illustration"
-            className="max-w-full h-auto rounded-md"
+            className="max-w-xs md:max-w-sm rounded-lg drop-shadow-lg"
           />
         </div>
       </div>
-      <p className="mt-6 text-sm text-black">
-        Already have an account? <Link to="/login" className="font-semibold underline">Login</Link>
-      </p>
     </div>
   );
 }
