@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImg from "/hero-graphic.png";
+import colabImg from "/colab.png"; // ✅ Fixed image path
 import config from "../config";
 
 export default function Home() {
@@ -33,7 +34,7 @@ export default function Home() {
           Never Let a Great Project Be Forgotten
         </h2>
 
-        <p className="text-gray-700 max-w-2xl mb-10 text-lg leading-relaxed">
+        <p className="text-gray-800 max-w-2xl mb-10 text-lg leading-relaxed">
           Project Tracker is your central hub to upload, browse, and revisit all student projects across Moringa School cohorts.
           Whether you're looking to get inspired, collaborate, or showcase your work — we've got you covered.
         </p>
@@ -47,7 +48,7 @@ export default function Home() {
 
         <div className="mt-16">
           <img
-            src="/colab.img"
+            src={colabImg}
             alt="Students collaborating"
             className="w-full max-w-md mx-auto rounded-xl shadow-xl"
           />
@@ -64,7 +65,7 @@ export default function Home() {
           <h2 className="text-4xl rounded-xl md:text-5xl font-bold mb-6 text-[#4F9CF9] leading-tight">
             Explore Moringa Projects
           </h2>
-          <p className="text-lg text-gray-700 mb-6">
+          <p className="text-lg text-gray-800 mb-6">
             Discover brilliant innovations built by Moringa School students. Dive into diverse tech stacks, meet creators, and submit your own work.
           </p>
           <div className="space-x-4">
@@ -90,7 +91,7 @@ export default function Home() {
         >
           <img
             src={heroImg}
-            alt="Student Projects Graphic"
+            alt="Illustration representing student tech projects"
             className="w-full max-w-md md:max-w-full"
           />
         </motion.div>
@@ -115,8 +116,12 @@ export default function Home() {
                   <div className="p-4 flex flex-col justify-between h-full">
                     <div>
                       <h3 className="text-xl font-semibold text-[#043873]">{project.name}</h3>
-                      <p className="text-sm text-gray-700 mb-2">
-                        {project.description?.slice(0, 50)}...
+                      <p className="text-sm text-gray-800 mb-2">
+                        {project.description
+                          ? project.description.length > 60
+                            ? project.description.slice(0, 60).split(" ").slice(0, -1).join(" ") + "..."
+                            : project.description
+                          : "No description provided."}
                       </p>
                     </div>
                     <div className="flex justify-between items-center mt-4">

@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, set_access_cookies
 from flask_mail import Message
 from app import app, mail
+from flask_cors import cross_origin
 
 user_bp = Blueprint("user_bp", __name__)
 
@@ -11,44 +12,38 @@ user_bp = Blueprint("user_bp", __name__)
 # Register a new user
 
 @user_bp.route("/register", methods=["POST"])
-def create_user():
+@cross_origin(supports_credentials=True)
+def register():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid or missing JSON"}), 400
 
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
 
     if not username or not email or not password:
-        return jsonify({"error": "Username, email, and password are required"}), 400
+        return jsonify({"error": "All fields are required"}), 400
 
-    if User.query.filter_by(username=username).first():
-        return jsonify({"error": "Username already exists"}), 400
+    if User.query.filter((User.email == email) | (User.username == username)).first():
+        return jsonify({"error": "Email or username already exists"}), 409
 
-    if User.query.filter_by(email=email).first():
-        return jsonify({"error": "Email already exists"}), 400
+    new_user = User(username=username, email=email)
+    new_user.set_password(password)
 
-    new_user = User(
-        username=username,
-        email=email,
-        password=generate_password_hash(password)
-    )
     db.session.add(new_user)
     db.session.commit()
 
-    # ✅ Generate JWT token
     access_token = create_access_token(identity=new_user.id)
 
-    # ✅ Send JWT in cookie
-    response = jsonify({
-        "message": "Registration successful",
+    return jsonify({
+        "access_token": access_token,
         "user": {
             "id": new_user.id,
             "username": new_user.username,
             "email": new_user.email
         }
-    })
-    set_access_cookies(response, access_token)
-    return response, 201
+    }), 201
 
 
 # Update user - change username/email/password, block/unblock, make admin

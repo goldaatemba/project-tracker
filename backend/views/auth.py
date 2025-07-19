@@ -41,27 +41,30 @@ def login():
         return jsonify({'error': 'Invalid JSON or server error'}), 400
 
     
-#  fetching logged in user
-@auth_bp.route("/me", methods=["GET"])
-@jwt_required()
+@auth_bp.route("/me", methods=["GET", "OPTIONS"])
+@jwt_required() 
 def fetch_current_user():
+    if request.method == "OPTIONS":
+        return '', 200
+
     current_user_id = get_jwt_identity()
 
+    if not current_user_id:
+        return jsonify({"error": "Not authenticated"}), 401
+    
+    
     user = User.query.get(current_user_id)
 
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    user_data = {
+    return jsonify({
         "id": user.id,
         "username": user.username,
         "email": user.email,
         "is_admin": user.is_admin,
-        "is_blocked": user.is_blocked,
-        "created_at": user.created_at
-    }
-    return jsonify(user_data), 200
-
+        "is_blocked": user.is_blocked
+    }), 200
 
 
 # Logout

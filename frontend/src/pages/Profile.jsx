@@ -4,10 +4,17 @@ const Profile = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('access_token'); // Get JWT from localStorage
+  
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+  
     fetch('http://localhost:5000/me', {
       method: "GET",
-      credentials: "include", // This is crucial when using cookies
       headers: {
+        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
     })
@@ -20,6 +27,7 @@ const Profile = () => {
       .then(data => setUser(data))
       .catch(err => console.error("Fetch error:", err));
   }, []);
+  
   
 
   if (!user) return <div className="text-center mt-10 text-lg">Loading...</div>;

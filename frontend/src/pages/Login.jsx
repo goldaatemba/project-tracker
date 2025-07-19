@@ -16,24 +16,35 @@ function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', 
         body: JSON.stringify({ email, password }),
       })
   
       if (!response.ok) {
         throw new Error('Login failed')
       }
-
+  
       const data = await response.json()
       console.log('Logged in:', data)
+  
+      localStorage.setItem('access_token', data.access_token)
 
-      navigate('/') 
-
+      const userRes = await fetch('http://localhost:5000/me', {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      })
+      const user = await userRes.json()
+      console.log('Current user:', user)
+      
+      navigate('/')
+  
+      navigate('/')
     } catch (err) {
       console.error(err)
       alert('Login failed: ' + err.message)
     }
   }
+  
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-200 px-4 py-8">
