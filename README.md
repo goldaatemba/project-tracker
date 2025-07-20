@@ -1,15 +1,15 @@
 # project-tracker
-# Project Tracker
+# ProjectBank
 
 #### The app is a project tracking system for Moringa School students, 15/07/2025
 
 #### **By Group 5 **
 
-## Description
+## => Description
 
 The application enables Moringa students to store and access all past and present projects organized by cohort and tech stack. Students can browse, upload, and manage their projects while also collaborating with others. The platform ensures easy tracking, inspiration, and reuse of student work.
 
-## Features / User Stories
+## => Features / User Stories
 
 ### A Student Can:
 
@@ -29,7 +29,7 @@ The application enables Moringa students to store and access all past and presen
 * Edit or delete projects that violate guidelines.
 * Ensure credibility by moderating content.
 
-## Setup/Installation Requirements
+## => Setup/Installation Requirements
 
 * Download or clone the repository to your local machine
 * Open the project folder with VS Code

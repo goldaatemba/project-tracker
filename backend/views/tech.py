@@ -63,4 +63,8 @@ def delete_tech(id):
     tech = Tech.query.get_or_404(id)
     db.session.delete(tech)
     db.session.commit()
+<<<<<<< HEAD
     return jsonify({"message": f"Tech '{tech.name}' deleted successfully"}), 200
+=======
+    return jsonify({"message": f"Tech '{tech.name}' deleted successfully"}), 200
+>>>>>>> c5acff5f4348676bb1408a4f6917874969a506fd
