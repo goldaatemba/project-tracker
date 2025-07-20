@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { api_url } from "../config.json";
+import { UserContext } from "../context/UserContext";
+import { toast } from "react-toastify";
 
 export function AdminDashboard() {
   const dashboardItems = [
@@ -28,18 +31,61 @@ export function AdminDashboard() {
 }
 
 export function ManageCohorts() {
+  const { auth_token } = useContext(UserContext);
   const [cohorts, setCohorts] = useState([]);
+  const [formData, setFormData] = useState({ name: '', description: '' });
 
   useEffect(() => {
-    fetch("api/cohorts")
+    fetch(`${api_url}/cohorts`, {
+      headers: { Authorization: `Bearer ${auth_token}` },
+    })
       .then((res) => res.json())
       .then(setCohorts)
-      .catch(() => console.error("Failed to load cohorts"));
-  }, []);
+      .catch(() => toast.error("Failed to load cohorts"));
+  }, [auth_token]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`${api_url}/cohorts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth_token}`,
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to create cohort");
+        toast.success("Cohort created!");
+        setFormData({ name: '', description: '' });
+        return res.json();
+      })
+      .then((newCohort) => setCohorts(prev => [...prev, newCohort]))
+      .catch(() => toast.error("Failed to create cohort"));
+  };
 
   return (
     <div className="bg-blue-100 min-h-screen p-8">
       <h1 className="text-2xl font-bold text-blue-900 mb-6">Manage Cohorts</h1>
+      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+        <input
+          type="text"
+          placeholder="Name"
+          className="w-full p-2 border rounded"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          className="w-full p-2 border rounded"
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          required
+        />
+        <button type="submit" className="bg-blue-800 text-white px-4 py-2 rounded">Create Cohort</button>
+      </form>
       <ul className="space-y-4">
         {cohorts.map((cohort) => (
           <li key={cohort.id} className="bg-white p-4 rounded-lg shadow">
@@ -53,14 +99,17 @@ export function ManageCohorts() {
 }
 
 export function ManageProjects() {
+  const { auth_token } = useContext(UserContext);
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    fetch("api/projects")
+    fetch(`${api_url}/projects`, {
+      headers: { Authorization: `Bearer ${auth_token}` },
+    })
       .then((res) => res.json())
       .then(setProjects)
-      .catch(() => console.error("Failed to load projects"));
-  }, []);
+      .catch(() => toast.error("Failed to load projects"));
+  }, [auth_token]);
 
   return (
     <div className="bg-blue-100 min-h-screen p-8">
@@ -70,6 +119,7 @@ export function ManageProjects() {
           <li key={project.id} className="bg-white p-4 rounded-lg shadow">
             <p className="text-blue-800"><strong>Name:</strong> {project.name}</p>
             <p className="text-blue-600"><strong>Description:</strong> {project.description}</p>
+            <p className="text-blue-600"><strong>GitHub Link:</strong> {project.github_link}</p>
           </li>
         ))}
       </ul>
