@@ -29,9 +29,29 @@ const Profile = () => {
       .catch(err => console.error("Fetch error:", err));
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    navigate('/login');
+  const handleLogout = async () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+  
+    try {
+      const res = await fetch('http://localhost:5000/logout', {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        const err = await res.json();
+        console.error("Logout failed:", err);
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      localStorage.removeItem('access_token');
+      navigate('/login');
+    }
   };
 
   const goToEditProfile = () => {

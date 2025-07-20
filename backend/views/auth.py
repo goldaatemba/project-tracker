@@ -41,7 +41,7 @@ def login():
             return jsonify({'error': 'Invalid credentials'}), 401
 
     except Exception as e:
-        print("❌ Error:", e)
+        print(" Error:", e)
         return jsonify({'error': 'Invalid JSON or server error'}), 400
 
     
