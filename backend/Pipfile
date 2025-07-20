@@ -11,12 +11,15 @@ packaging = "==25.0"
 pipenv = "==2024.4.1"
 platformdirs = "==4.3.6"
 virtualenv = "==20.31.2"
-flask = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-mail = "*"
 flask-jwt-extended = "*"
 flask-cors = "*"
+flask = "*"
+flask-oauthlib = "*"
+python-dotenv = "*"
+google-auth = "*"
 
 [dev-packages]
 

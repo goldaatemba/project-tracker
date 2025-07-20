@@ -1,60 +1,92 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/login`, {
+      const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      if (!response.ok) {
-        throw new Error('Invalid email or password')
-      }
+      if (!response.ok) throw new Error('Invalid email or password');
 
-      const data = await response.json()
-      localStorage.setItem('access_token', data.access_token)
+      const data = await response.json();
+      localStorage.setItem('access_token', data.access_token);
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: {
           Authorization: `Bearer ${data.access_token}`,
         },
-      })
+      });
 
-      if (!userRes.ok) {
-        throw new Error('Failed to fetch user')
-      }
+      if (!userRes.ok) throw new Error('Failed to fetch user');
 
-      const user = await userRes.json()
-      toast.success(`Welcome back, ${user.username}!`)
-      navigate('/')
+      const user = await userRes.json();
+      toast.success(`Welcome back, ${user.username}!`);
+      navigate('/');
     } catch (err) {
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+      const decoded = jwtDecode(credential);
+      console.log("Decoded Google credential:", decoded);
+
+      const res = await fetch('http://localhost:5000/login/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential }),
+      });
+
+      if (!res.ok) throw new Error('Google login failed');
+
+      const data = await res.json();
+      localStorage.setItem('access_token', data.access_token);
+
+      const userRes = await fetch('http://localhost:5000/me', {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+
+      if (!userRes.ok) throw new Error('Failed to fetch user');
+
+      const user = await userRes.json();
+      toast.success(`Welcome, ${user.username}!`);
+      navigate('/');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google sign-in was unsuccessful. Try again.');
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-4 py-12">
       <ToastContainer />
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl animate-fade-in">
-
         {/* Left Side: Form */}
         <div className="w-full md:w-1/2 p-10 bg-blue-100">
           <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Welcome Back</h2>
@@ -103,6 +135,17 @@ function Login() {
               {loading ? 'Logging in...' : 'Log In'}
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 mb-2">Or sign in with Google</p>
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                useOneTap
+              />
+            </div>
+          </div>
         </div>
 
         {/* Right Side: Image */}
@@ -123,7 +166,7 @@ function Login() {
         </Link>
       </p>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

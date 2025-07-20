@@ -5,6 +5,9 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from datetime import timedelta
 from models import db, TokenBlocklist
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # Initialize Flask App
 app = Flask(__name__)
@@ -31,6 +34,11 @@ app.config['MAIL_USERNAME'] = 'goldaatemba76@gmail.com'
 app.config['MAIL_PASSWORD'] = 'iwra vjbu ylzn vluq'  # Consider moving this to environment variable!
 app.config['MAIL_DEFAULT_SENDER'] = 'goldaatemba76@gmail.com'
 mail = Mail(app)
+
+# Google OAuth Config
+app.config['GOOGLE_CLIENT_ID'] = '54790823933-pl1q47ujvtjdefs0bvnf37qk7rhl63ku.apps.googleusercontent.com'
+app.config['GOOGLE_CLIENT_SECRET'] = 'your-client-secret'
+app.config['GOOGLE_DISCOVERY_URL'] = 'https://accounts.google.com/.well-known/openid-configuration'
 
 # JWT Config
 app.config["JWT_SECRET_KEY"] = "sjusefvyilgfvksbhvfiknhalvufn"
