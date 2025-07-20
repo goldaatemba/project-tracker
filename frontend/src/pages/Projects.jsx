@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProjectCard from "../components/ProjectCard";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -22,7 +22,6 @@ function Projects() {
   }, []);
 
   const stacks = ["All", "Fullstack", "Android"];
-
   const filteredProjects =
     selectedStack === "All"
       ? projects
@@ -31,46 +30,49 @@ function Projects() {
         );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e8f1fa] to-white p-4 md:p-10">
+    <div className="min-h-screen bg-gradient-to-br from-[#e8f1fa] to-white py-8 px-4 md:px-10">
       <div className="max-w-7xl mx-auto">
-        {/* Header with Add Button */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <div className="text-center md:text-left mb-6 md:mb-0">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-[#043873]">
-              Explore Student Projects
-            </h1>
-            <p className="text-gray-600 max-w-2xl mt-2">
-              Browse innovative projects built by Moringa School students across various cohorts. Tap into their creativity, stack choices, and execution!
-            </p>
+        {/* Header */}
+        <div className="flex flex-col items-center justify-center text-center mb-12">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#043873] mb-4">
+            Explore Student Projects
+          </h1>
+          <p className="text-gray-600 text-4xl md:text-base max-w-2xl">
+            Browse innovative projects built by Moringa School students across
+            various cohorts. Tap into their creativity, stack choices, and
+            execution!
+          </p>
+        </div>
+
+        {/* Filters & Button */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
+          <div className="flex gap-4 flex-wrap justify-center">
+            <select
+              className="p-2 border border-blue-300 rounded bg-white shadow-sm"
+              onChange={(e) => setSelectedStack(e.target.value)}
+            >
+              {stacks.map((stack) => (
+                <option key={stack} value={stack}>
+                  {stack}
+                </option>
+              ))}
+            </select>
+
+            <select className="p-2 border border-blue-300 rounded bg-white shadow-sm">
+              <option value="">Tech Stack</option>
+              <option value="react">React</option>
+              <option value="flask">Flask</option>
+              <option value="django">Django</option>
+              <option value="node">Node.js</option>
+            </select>
           </div>
+
           <Link
             to="/addproject"
-            className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-5 rounded shadow"
+            className="bg-green-600 hover:bg-green-500 transition text-white font-semibold py-2 px-6 rounded shadow"
           >
             + Add Project
           </Link>
-        </div>
-
-        {/* Filter Options */}
-        <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-8">
-          <select
-            className="p-2 border border-blue-300 rounded bg-white shadow-sm"
-            onChange={(e) => setSelectedStack(e.target.value)}
-          >
-            {stacks.map((stack) => (
-              <option key={stack} value={stack}>
-                {stack}
-              </option>
-            ))}
-          </select>
-
-          <select className="p-2 border border-blue-300 rounded bg-white shadow-sm">
-            <option value="">Tech Stack</option>
-            <option value="react">React</option>
-            <option value="flask">Flask</option>
-            <option value="django">Django</option>
-            <option value="node">Node.js</option>
-          </select>
         </div>
 
         {/* Projects Grid */}

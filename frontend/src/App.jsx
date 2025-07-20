@@ -14,6 +14,7 @@ import { AdminDashboard } from './pages/Admin';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import CohortProjects from './pages/Cohorts';
+import AddProjects from './pages/AddProjects';
 import ProjectForm from './pages/AddProjects';
 import SingleProject from './pages/SingleProject';
 
