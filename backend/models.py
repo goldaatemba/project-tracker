@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import MetaData
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 metadata = MetaData()
 db = SQLAlchemy(metadata=metadata)
@@ -21,14 +23,32 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(256), nullable=False)
+    password = db.Column(db.String(256), nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Relationships
     owned_projects = db.relationship('Project', backref='owner', lazy=True)
     memberships = db.relationship('Member', backref='user', lazy=True)
+
+    def __repr__(self):
+        return f"<User {self.id} - {self.username}>"
+
+    def set_password(self, plain_password):
+        self.password = generate_password_hash(plain_password)
+
+    def check_password(self, plain_password):
+        return check_password_hash(self.password, plain_password)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "is_admin": self.is_admin,
+            "is_blocked": self.is_blocked,
+            "created_at": self.created_at.isoformat()
+        }
 
 
 

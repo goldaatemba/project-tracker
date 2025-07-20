@@ -6,7 +6,7 @@ function SingleProject() {
   const [project, setProject] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/projects/${id}`)
+    fetch(`http://localhost:5000/projects/${id}`)
       .then(res => {
         if (!res.ok) throw new Error("Project not found");
         return res.json();

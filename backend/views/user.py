@@ -1,61 +1,49 @@
 from flask import request, jsonify, Blueprint
 from models import db, User, Project, Cohort, Member, Tech
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, set_access_cookies
 from flask_mail import Message
 from app import app, mail
+from flask_cors import cross_origin
 
 user_bp = Blueprint("user_bp", __name__)
 
 
 # Register a new user
-@user_bp.route("/users", methods=["POST"])
-def create_user():
+
+@user_bp.route("/register", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def register():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid or missing JSON"}), 400
 
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
 
     if not username or not email or not password:
-        return jsonify({"error": "Username, email, and password are required"}), 400
+        return jsonify({"error": "All fields are required"}), 400
 
-    if User.query.filter_by(username=username).first():
-        return jsonify({"error": "Username already exists"}), 400
+    if User.query.filter((User.email == email) | (User.username == username)).first():
+        return jsonify({"error": "Email or username already exists"}), 409
 
-    if User.query.filter_by(email=email).first():
-        return jsonify({"error": "Email already exists"}), 400
+    new_user = User(username=username, email=email)
+    new_user.set_password(password)
 
-    new_user = User(
-        username=username,
-        email=email,
-        password=generate_password_hash(password)
-    )
     db.session.add(new_user)
+    db.session.commit()
 
-    try:
-        msg = Message(
-            subject="Welcome to Project Tracker",
-            recipients=[email],
-            sender=app.config['MAIL_DEFAULT_SENDER'],
-            body=f"Hello {username},\n\nThank you for registering on Project Tracker. We're glad to have you onboard!\n\n— Project Tracker Team"
-        )
-        mail.send(msg)
-        db.session.commit()
-        return jsonify({
-            "success": "User created successfully",
-            "user": {
-                "id": new_user.id,
-                "username": new_user.username,
-                "email": new_user.email,
-                "is_admin": new_user.is_admin,
-                "is_blocked": new_user.is_blocked
-            }
-        }), 201
+    access_token = create_access_token(identity=new_user.id)
 
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": f"Failed to register or send email: {str(e)}"}), 400
+    return jsonify({
+        "access_token": access_token,
+        "user": {
+            "id": new_user.id,
+            "username": new_user.username,
+            "email": new_user.email
+        }
+    }), 201
 
 
 # Update user - change username/email/password, block/unblock, make admin
