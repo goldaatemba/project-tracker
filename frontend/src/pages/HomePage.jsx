@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import heroImg from "/hero-graphic.png";
-import colabImg from "/colab.png"; // ✅ Fixed image path
+import heroImg from "/colab.png";
+import colabImg from "/colab.png"; 
 import config from "../config";
 
 export default function Home() {
