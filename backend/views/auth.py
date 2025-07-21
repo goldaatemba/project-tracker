@@ -23,7 +23,7 @@ def login():
 
     try:
         data = request.get_json(force=True)
-        print("📥 Received data:", data)
+        print(" Received data:", data)
 
         email = data.get('email')
         password = data.get('password')
@@ -114,5 +114,5 @@ def google_login():
         return jsonify({'access_token': access_token}), 200
 
     except ValueError as e:
-        print("🔴 Google token validation failed:", e)
+        print(" Google token validation failed:", e)
         return jsonify({"error": "Invalid Google token"}), 400

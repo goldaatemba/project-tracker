@@ -1,74 +1,172 @@
-import React, { useContext, useState } from 'react';
-import { UserContext } from '../context/UserContext';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Login = () => {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const {login_user} = useContext(UserContext);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // using login_user function from UserContext
-    login_user(email, password);
-    console.log('Logging in with:', email, password);
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) throw new Error('Invalid email or password');
+
+      const data = await response.json();
+      localStorage.setItem('access_token', data.access_token);
+
+      const userRes = await fetch('http://localhost:5000/me', {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+
+      if (!userRes.ok) throw new Error('Failed to fetch user');
+
+      const user = await userRes.json();
+      toast.success(`Welcome back, ${user.username}!`);
+      navigate('/');
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+      const decoded = jwtDecode(credential);
+      console.log("Decoded Google credential:", decoded);
+
+      const res = await fetch('http://localhost:5000/login/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential }),
+      });
+
+      if (!res.ok) throw new Error('Google login failed');
+
+      const data = await res.json();
+      localStorage.setItem('access_token', data.access_token);
+
+      const userRes = await fetch('http://localhost:5000/me', {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+
+      if (!userRes.ok) throw new Error('Failed to fetch user');
+
+      const user = await userRes.json();
+      toast.success(`Welcome, ${user.username}!`);
+      navigate('/');
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google sign-in was unsuccessful. Try again.');
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
-        <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-          
-          <div className="mt-12 flex flex-col items-center">
-            <h1 className="text-2xl xl:text-3xl font-extrabold">Login </h1>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-4 py-12">
+      <ToastContainer />
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl animate-fade-in">
+        {/* Left Side: Form */}
+        <div className="w-full md:w-1/2 p-10 bg-blue-100">
+          <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Welcome Back</h2>
 
-            <div className="w-full flex-1 mt-8">
-              <form onSubmit={handleSubmit}>
-                <div className="mx-auto max-w-xs">
-                  <input required
-                    type="email"
-                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <input required
-                    type="password"
-                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button
-                    type="submit"
-                    className="mt-5 tracking-wide font-semibold bg-sky-500 text-gray-100 w-full py-4 rounded-lg hover:bg-sky-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                  >
-                    <span className="ml-3">Login</span>
-                  </button>
-                </div>
-              </form>
-              <p className="mt-6 text-xs text-gray-600 text-center">
-                Don't have an account?{' '}
-                <a href="/register" className="border-b border-gray-500 border-dotted">
-                  Register here
-                </a>
-              </p>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              />
+            </div>
+
+            <div className="flex items-center">
+              <input
+                id="remember"
+                type="checkbox"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+              />
+              <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
+                Remember me
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-yellow-300 py-2 rounded-xl font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {loading ? 'Logging in...' : 'Log In'}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 mb-2">Or sign in with Google</p>
+            <div className="flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                useOneTap
+              />
             </div>
           </div>
         </div>
-        <div className="flex-1 bg-sky-100 text-center hidden lg:flex">
-          <div
-            className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
-            style={{
-              backgroundImage:
-                "url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg')",
-            }}
-          ></div>
+
+        {/* Right Side: Image */}
+        <div className="w-full md:w-1/2 bg-blue-500 flex items-center justify-center p-6">
+          <img
+            src="/project1.png"
+            alt="Illustration"
+            className="rounded-xl w-full max-w-md"
+          />
         </div>
       </div>
+
+      {/* Footer */}
+      <p className="mt-6 text-sm text-gray-700">
+        Don’t have an account?{' '}
+        <Link to="/register" className="text-blue-600 font-semibold underline hover:text-blue-800">
+          Register
+        </Link>
+      </p>
     </div>
   );
-};
+}
 
 export default Login;

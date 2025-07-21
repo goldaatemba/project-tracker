@@ -4,11 +4,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-10">
       <div className="max-w-2xl w-full bg-white p-8 rounded-lg shadow-md">
-<<<<<<< HEAD
-        <h1 className="text-3xl font-bold mb-4 text-gray-800">Contact the Project Tracker Team</h1>
-=======
         <h1 className="text-3xl font-bold mb-4 text-gray-800">Contact the ProjectBank Team</h1>
->>>>>>> 1b55526cae0080c3029a1b6157556d0d8e62daa6
         <p className="mb-6 text-gray-600">
           Have a question, feedback, or found a bug? Let us know and we'll get back to you as soon as possible.
         </p>
@@ -62,8 +58,4 @@ const Contact = () => {
   );
 };
 
-<<<<<<< HEAD
 export default Contact;
-=======
-export default Contact;
->>>>>>> 1b55526cae0080c3029a1b6157556d0d8e62daa6

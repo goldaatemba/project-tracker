@@ -37,7 +37,9 @@ const ProjectForm = () => {
     <div className="min-h-screen bg-gradient-to-tr from-blue-50 via-white to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-2xl">
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-extrabold text-[#043873]">Submit Your Project</h2>
+          <h2 className="text-4xl font-extrabold text-[#043873]">
+            Submit Your Project
+          </h2>
           <p className="mt-2 text-gray-600 max-w-xl mx-auto">
             Share your creation with the Moringa community. Showcase your creativity, skills, and team effort!
           </p>
@@ -52,9 +54,7 @@ const ProjectForm = () => {
             { label: 'Group Members', name: 'groupMembers', placeholder: 'Comma-separated names (optional)' },
           ].map(({ label, name, type, placeholder }) => (
             <div key={name}>
-              <label htmlFor={name} className="block text-[#043873] font-medium mb-1">
-                {label}
-              </label>
+              <label htmlFor={name} className="block text-[#043873] font-medium mb-1">{label}</label>
               {type === 'textarea' ? (
                 <textarea
                   name={name}
