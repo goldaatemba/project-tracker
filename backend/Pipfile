@@ -4,11 +4,30 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+<<<<<<< HEAD
 flask = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
+=======
+certifi = "==2025.7.14"
+distlib = "==0.4.0"
+filelock = "==3.16.1"
+packaging = "==25.0"
+pipenv = "==2024.4.1"
+platformdirs = "==4.3.6"
+virtualenv = "==20.31.2"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+flask-mail = "*"
+flask-jwt-extended = "*"
+flask-oauthlib = "*"
+python-dotenv = "*"
+google-auth = "*"
+flask = "*"
+flask-cors = "*"
+>>>>>>> d0383da1e1949c2e9dd07bad69ef9006ff32aac9
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.8"
