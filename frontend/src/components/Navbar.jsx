@@ -9,7 +9,6 @@ function Navbar() {
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
-  // Check for token on mount
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     setIsLoggedIn(!!token);
@@ -121,7 +120,7 @@ function Navbar() {
               key={link.name}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className="block text-white hover:text-yellow-400 py-2 border-b border-white"
+              className="block text-white hover:text-yellow-400 py-2 text-center border-b border-white w-full"
             >
               {link.name}
             </NavLink>

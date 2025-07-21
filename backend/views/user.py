@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from models import db, User, Project, Cohort, Member, Tech
+from models import db, User, Project, Cohort, Member
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, set_access_cookies
 from flask_mail import Message
@@ -93,7 +93,6 @@ def update_user():
         if data['email'] != user.email:
             # Email change requires verification
             user.email = data['email']
-            user.email_verified = False
             updated_fields.append('email')
             # Here you would generate and send verification token
     
@@ -138,7 +137,6 @@ def update_user():
                 "email": user.email,
                 "is_admin": user.is_admin,
                 "is_blocked": user.is_blocked,
-                "email_verified": user.email_verified
             }
         }), 200
 
@@ -147,7 +145,7 @@ def update_user():
         app.logger.error(f"User update failed: {str(e)}")
         return jsonify({"error": "Failed to update profile"}), 500
     
-    
+
 # Get a single user by ID
 @user_bp.route("/users/<int:user_id>", methods=["GET"])
 def fetch_user_by_id(user_id):
@@ -205,9 +203,6 @@ def delete_user():
     for member in Member.query.filter_by(user_id=current_user_id).all():
         db.session.delete(member)
 
-    # Delete related techs
-    for tech in Tech.query.filter_by(user_id=current_user_id).all():
-        db.session.delete(tech)
 
     db.session.commit()
 

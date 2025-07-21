@@ -3,4 +3,4 @@ from .user import user_bp
 from .cohort import cohort_bp
 from .project import project_bp
 from .member import member_bp
-from .tech import tech_bp
+

@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [selectedStack, setSelectedStack] = useState("All");
+  const [selectedCohort, setSelectedCohort] = useState("All");
+  const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
     fetch("http://localhost:5000/projects")
@@ -22,12 +24,24 @@ function Projects() {
   }, []);
 
   const stacks = ["All", "Fullstack", "Android"];
-  const filteredProjects =
-    selectedStack === "All"
-      ? projects
-      : projects.filter((project) =>
-          project.stack.toLowerCase().includes(selectedStack.toLowerCase())
-        );
+  const cohorts = ["All", "SDF-PT-01", "SDF-FT-04", "SE-PT-10"]; // Add actual cohort values from your DB
+
+  const filteredProjects = projects
+    .filter((project) =>
+      selectedStack === "All"
+        ? true
+        : project.stack?.toLowerCase().includes(selectedStack.toLowerCase())
+    )
+    .filter((project) =>
+      selectedCohort === "All"
+        ? true
+        : project.cohort?.name === selectedCohort
+    )
+    .sort((a, b) =>
+      sortOrder === "newest"
+        ? new Date(b.created_at) - new Date(a.created_at)
+        : new Date(a.created_at) - new Date(b.created_at)
+    );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e8f1fa] to-white py-8 px-4 md:px-10">
@@ -47,9 +61,11 @@ function Projects() {
         {/* Filters & Button */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
           <div className="flex gap-4 flex-wrap justify-center">
+            {/* Stack Filter */}
             <select
               className="p-2 border border-blue-300 rounded bg-white shadow-sm"
               onChange={(e) => setSelectedStack(e.target.value)}
+              value={selectedStack}
             >
               {stacks.map((stack) => (
                 <option key={stack} value={stack}>
@@ -58,12 +74,27 @@ function Projects() {
               ))}
             </select>
 
-            <select className="p-2 border border-blue-300 rounded bg-white shadow-sm">
-              <option value="">Tech Stack</option>
-              <option value="react">React</option>
-              <option value="flask">Flask</option>
-              <option value="django">Django</option>
-              <option value="node">Node.js</option>
+            {/* Cohort Filter */}
+            <select
+              className="p-2 border border-blue-300 rounded bg-white shadow-sm"
+              onChange={(e) => setSelectedCohort(e.target.value)}
+              value={selectedCohort}
+            >
+              {cohorts.map((cohort) => (
+                <option key={cohort} value={cohort}>
+                  {cohort}
+                </option>
+              ))}
+            </select>
+
+            {/* Sort Order */}
+            <select
+              className="p-2 border border-blue-300 rounded bg-white shadow-sm"
+              onChange={(e) => setSortOrder(e.target.value)}
+              value={sortOrder}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
             </select>
           </div>
 
@@ -83,7 +114,6 @@ function Projects() {
         </div>
       </div>
 
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

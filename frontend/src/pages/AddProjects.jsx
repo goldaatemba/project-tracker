@@ -8,7 +8,7 @@ function ProjectForm() {
     description: '',
     githubLink: '',
     cohortSelection: '',
-    techStack: [],
+    techStack: '',
     groupMembers: '',
   });
 
@@ -29,18 +29,13 @@ function ProjectForm() {
     }));
   };
 
-  const handleTechStackChange = (e) => {
-    const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-    setFormData((prev) => ({ ...prev, techStack: selected }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { projectName, description, githubLink, cohortSelection, techStack, groupMembers } = formData;
+    const { projectName, description, githubLink, cohortSelection, techStack } = formData;
 
-    if (!projectName || !description || !cohortSelection) {
-      toast.error('Please fill in required fields.');
+    if (!projectName || !description || !cohortSelection || !techStack) {
+      toast.error('Please fill in all required fields.');
       return;
     }
 
@@ -57,25 +52,22 @@ function ProjectForm() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
-        body: JSON.stringify({
-          ...formData,
-          techStack: formData.techStack.join(', '), 
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (!res.ok) throw new Error('Failed to submit project');
-      toast.success(' Project submitted!');
+      toast.success('✅ Project submitted!');
 
       setFormData({
         projectName: '',
         description: '',
         githubLink: '',
         cohortSelection: '',
-        techStack: [],
+        techStack: '',
         groupMembers: '',
       });
     } catch (err) {
-      toast.error('Something went wrong!');
+      toast.error('❌ Something went wrong!');
     }
   };
 
@@ -88,10 +80,10 @@ function ProjectForm() {
           <input
             type="text"
             name="projectName"
-            placeholder="e.g., JobTracker"
             value={formData.projectName}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="e.g., My Awesome App"
             required
           />
         </div>
@@ -100,10 +92,10 @@ function ProjectForm() {
           <label className="block mb-1 font-medium">Description *</label>
           <textarea
             name="description"
-            placeholder="Briefly describe your project..."
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="Describe the project..."
             rows={4}
             required
           />
@@ -114,10 +106,10 @@ function ProjectForm() {
           <input
             type="url"
             name="githubLink"
-            placeholder="https://github.com/your-project"
             value={formData.githubLink}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="https://github.com/your-project"
           />
         </div>
 
@@ -127,7 +119,7 @@ function ProjectForm() {
             name="cohortSelection"
             value={formData.cohortSelection}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-300 rounded-lg"
             required
           >
             <option value="">-- Select Cohort --</option>
@@ -140,27 +132,23 @@ function ProjectForm() {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Tech Stack</label>
+          <label className="block mb-1 font-medium">Tech Stack *</label>
           <select
             name="techStack"
-            multiple
             value={formData.techStack}
-            onChange={handleTechStackChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 h-48"
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            required
           >
-            <option value="React">React</option>
-            <option value="Flask">Flask</option>
-            <option value="Django">Django</option>
-            <option value="Node.js">Node.js</option>
-            <option value="Express">Express</option>
-            <option value="PostgreSQL">PostgreSQL</option>
-            <option value="MongoDB">MongoDB</option>
-            <option value="Tailwind CSS">Tailwind CSS</option>
-            <option value="TypeScript">TypeScript</option>
-            <option value="Python">Python</option>
-            <option value="JavaScript">JavaScript</option>
+            <option value="">-- Select Tech Stack --</option>
+            <option value="Android">Android</option>
+            <option value="iOS">iOS</option>
+            <option value="Web">Web</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Game Development">Game Development</option>
+            <option value="IoT">IoT</option>
           </select>
-          <p className="text-sm text-gray-500 mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
         </div>
 
         <div>
@@ -168,16 +156,16 @@ function ProjectForm() {
           <input
             type="text"
             name="groupMembers"
-            placeholder="e.g., Alex, Fatma, Kevin"
             value={formData.groupMembers}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="e.g., Alice, Bob, Carlos"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold py-3 rounded-lg transition duration-200"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700"
         >
           Submit Project
         </button>

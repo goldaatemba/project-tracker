@@ -52,22 +52,15 @@ class Cohort(db.Model):
 
     projects = db.relationship('Project', backref='cohort', lazy=True)
 
-class Tech(db.Model):
-    __tablename__ = 'techs'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-
-    projects = db.relationship('Project', backref='tech', lazy=True)
-
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    tech = db.Column(db.Text, nullable=True)
     github_link = db.Column(db.Text, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)
-    tech_id = db.Column(db.Integer, db.ForeignKey('techs.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     members = db.relationship('Member', backref='project', lazy=True)
