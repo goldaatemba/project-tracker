@@ -15,6 +15,7 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-mail = "*"
 flask-jwt-extended = "*"
+<<<<<<< HEAD
 flask-cors = "*"
 <<<<<<< HEAD
 psycopg2-binary = "*"
@@ -27,6 +28,13 @@ flask-oauthlib = "*"
 python-dotenv = "*"
 google-auth = "*"
 >>>>>>> c5acff5f4348676bb1408a4f6917874969a506fd
+=======
+flask-oauthlib = "*"
+python-dotenv = "*"
+google-auth = "*"
+flask = "*"
+flask-cors = "*"
+>>>>>>> 1b55526cae0080c3029a1b6157556d0d8e62daa6
 
 [dev-packages]
 

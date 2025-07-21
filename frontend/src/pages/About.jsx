@@ -24,6 +24,14 @@ const About = () => {
           </ul>
         </div>
 
+        <div className="space-y-4 text-blue-800 text-base leading-relaxed">
+          <p><strong>Discover:</strong> Explore a diverse range of student projects from different cohorts and disciplines. Filter by category, cohort, or technology used.</p>
+          <p><strong>Upload:</strong> Easily upload your own project to the platform and showcase your skills, ideas, and progress. Perfect for portfolio building and peer feedback.</p>
+          <p><strong>Collaborate:</strong> Find other students working on similar ideas and connect for possible collaboration or peer review.</p>
+          <p><strong>Track Progress:</strong> Admins and students can follow how projects evolve over time, ensuring continuity and accountability.</p>
+          <p><strong>Highlight Excellence:</strong> Exceptional projects can be featured, helping to motivate and recognize great work within the community.</p>
+        </div>
+
         <div>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">Our Mission</h2>
           <p className="text-gray-700">

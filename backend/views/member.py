@@ -13,27 +13,14 @@ def add_member():
     db.session.commit()
     return jsonify({"success": "Member added"}), 201
 
-
 @member_bp.route("/members/<int:id>", methods=["GET"])
 def get_member(id):
     member = Member.query.get_or_404(id)
-    return jsonify({
-        "id": member.id,
-        "project_id": member.project_id,
-        "user_id": member.user_id
-    })
-
+    return jsonify(member.to_dict())
 
 @member_bp.route("/members", methods=["GET"])
 def get_all_members():
-    return jsonify([
-        {
-            "id": m.id,
-            "project_id": m.project_id,
-            "user_id": m.user_id
-        } for m in Member.query.all()
-    ])
-
+    return jsonify([m.to_dict() for m in Member.query.all()])
 
 @member_bp.route("/members/<int:id>", methods=["PATCH"])
 @jwt_required()
@@ -44,7 +31,6 @@ def update_member(id):
     member.user_id = data.get("user_id", member.user_id)
     db.session.commit()
     return jsonify({"success": "Member updated"}), 200
-
 
 @member_bp.route("/members/<int:id>", methods=["DELETE"])
 @jwt_required()

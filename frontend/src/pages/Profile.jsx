@@ -1,151 +1,143 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../context/UserContext';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LogOut, Pencil } from 'lucide-react';
 
 const Profile = () => {
-    const {currentUser, update_user_profile, delete_profile} = useContext(UserContext);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  // set initial values for username and email from currentUser
   useEffect(() => {
-    if (currentUser) {
-      setUsername(currentUser.username);
-      setEmail(currentUser.email);
-    }
-  }, [currentUser]);
+    const token = localStorage.getItem('access_token');
 
-  // if the user is not logged in, show a message
-  if (!currentUser) {
-    return <div className="text-center mt-20">Please log in to view your profile.</div>;
-  }
-
-  const handleProfileUpdate = (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast.error("New password and confirm password do not match.");
+    if (!token) {
+      console.error("No token found");
       return;
     }
-    else{
-       update_user_profile(username, email, password, newPassword);
-        // setPassword('');
-        // setNewPassword('');
-        // setConfirmPassword('');
+
+    fetch('http://localhost:5000/me', {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch user");
+        return res.json();
+      })
+      .then(data => setUser(data))
+      .catch(err => console.error("Fetch error:", err));
+  }, []);
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+  
+    try {
+      const res = await fetch('http://localhost:5000/logout', {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        const err = await res.json();
+        console.error("Logout failed:", err);
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      localStorage.removeItem('access_token');
+      navigate('/login');
     }
   };
 
+  const goToEditProfile = () => {
+    navigate('/edit-profile');
+  };
+
+  if (!user) return <div className="text-center mt-10 text-lg">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center py-8">
-      <div className="border bg-white rounded-lg shadow-md p-8 w-full sm:w-[50vw]">
-        <div className="flex flex-col items-center mb-8">
+    <section className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white py-10">
+      <div className="w-full max-w-5xl mx-auto flex flex-col">
+        {/* Cover Image */}
+        <div className="relative">
           <img
-            src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg"
-            alt="Profile"
-            className="rounded-full w-32 h-32 mb-4"
+            src="/cover.jpg"
+            alt="Cover"
+            className="w-full h-64 object-cover rounded-lg shadow-md"
           />
-          <h2 className="text-2xl font-semibold text-gray-800">{currentUser && currentUser.username}</h2>
-          <p className="text-sm text-gray-600">{currentUser && currentUser.email}</p>
+          <div className="absolute -bottom-12 left-8 flex items-center gap-4">
+            <img
+              src="/default-avatar.png"
+              alt="Avatar"
+              className="rounded-lg w-28 h-28 border-4 border-white dark:border-gray-900 shadow-lg"
+            />
+            <div>
+              <h1 className="text-3xl text-white font-bold">{user.username}</h1>
+              <div className="mt-2 flex gap-3">
+                <button
+                  onClick={goToEditProfile}
+                  className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm transition"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm transition"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Buttons for Admin/User and Block User */}
-        <div className="flex justify-center gap-3 mb-8">
-         { currentUser && currentUser.is_admin ?
-            <button
-              className="bg-blue-500 px-8 py-3 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-            >
-              Admin
-            </button>
-            :
-            <button
-              className=" bg-green-500 px-8 py-3 text-white py-2 rounded-lg hover:bg-green-700 transition duration-300"
-            >
-              User
-            </button>
-        }
+        {/* Info Grid */}
+        <div className="mt-24 grid md:grid-cols-2 gap-10 px-4 md:px-0">
+          {/* Account Info */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
+            <h2 className="text-xl font-semibold border-b pb-2">Account Info</h2>
+            <div>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
+              <p>{user.email}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Joined</p>
+              <p>{new Date(user.created_at).toLocaleDateString()}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Account Status</p>
+              <p className={user.is_blocked ? 'text-red-500 font-medium' : 'text-green-500 font-medium'}>
+                {user.is_blocked ? "Blocked" : "Active"}
+              </p>
+            </div>
+          </div>
+
+          {/* Projects */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
+            <h2 className="text-xl font-semibold border-b pb-2">My Projects</h2>
+            {user.owned_projects?.length > 0 ? (
+              <ul className="space-y-3">
+                {user.owned_projects.map(project => (
+                  <li key={project.id} className="border p-3 rounded-lg bg-gray-100 dark:bg-gray-700">
+                    <h3 className="font-semibold">{project.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 italic">No owned projects yet.</p>
+            )}
+          </div>
         </div>
-
-        {/* profile update form */}
-        <form onSubmit={handleProfileUpdate} className="space-y-6">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-600">Username</label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-600">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-600">Current Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-600">New Password</label>
-            <input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-600">Confirm New Password</label>
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-sky-500 text-white py-3 rounded-lg hover:bg-sky-700 transition duration-300"
-          >
-            Update Profile
-          </button>
-        </form>
-
-
-        <h3 className='text-lg font-semibold text-gray-800 mt-8 mb-4'>DANGER ZONE! Delete Profile</h3>
-        <button onClick={delete_profile}
-            type="submit"
-            className="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-700 transition duration-300"
-          >
-            DELETE YOUR ACCOUNT
-        </button>
-
-
       </div>
-    </div>
+    </section>
   );
 };
 
