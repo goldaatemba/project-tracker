@@ -57,7 +57,13 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
     return token is not None
 
 # Register Blueprints
-from views import auth_bp, user_bp, cohort_bp, project_bp, member_bp, tech_bp
+from views import auth_bp
+from views.user import user_bp
+from views.cohort import cohort_bp
+from views.project import project_bp
+from views.member import member_bp
+from views.tech import tech_bp
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(cohort_bp)

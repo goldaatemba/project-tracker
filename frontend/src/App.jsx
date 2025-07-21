@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom';
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './index.css'
 import HomePage from './pages/HomePage';
 import Navbar from './components/Navbar';
 import NoPage from './pages/NoPage';
@@ -16,6 +14,7 @@ import { AdminDashboard } from './pages/Admin';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import CohortProjects from './pages/Cohorts';
+import AddProjects from './pages/AddProjects';
 import ProjectForm from './pages/AddProjects';
 import SingleProject from './pages/SingleProject';
 import Contact from './pages/Contact';

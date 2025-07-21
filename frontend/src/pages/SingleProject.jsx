@@ -31,19 +31,19 @@ function SingleProject() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800 text-base">
           <div>
-            <p><span className="font-semibold text-[#4F46E5]">Tech Stack:</span> {project.stack}</p>
-            <p><span className="font-semibold text-[#4F46E5]">Created:</span> {project.created}</p>
-            <p><span className="font-semibold text-[#4F46E5]">Cohort:</span> {project.cohort}</p>
-            <p><span className="font-semibold text-[#4F46E5]">Author:</span> {project.author}</p>
+            <p><span className="font-semibold text-[#4F46E5]">Tech Stack:</span> {project.tech_stack}</p>
+            <p><span className="font-semibold text-[#4F46E5]">Created:</span> {project.created_at}</p>
+            <p><span className="font-semibold text-[#4F46E5]">Cohort:</span> {project.cohort_name}</p>
+            <p><span className="font-semibold text-[#4F46E5]">Author:</span> {project.owner}</p>
           </div>
           <div>
             <p>
-              <span className="font-semibold text-[#4F46E5]">GitHub:</span>{' '}
-              <a href={project.github} className="text-blue-600 hover:underline" target="_blank" rel="noreferrer">
-                {project.github}
+              <span className="font-semibold text-[#4F46E5]">GitHub: </span>
+              <a href={project.github_link} className="text-blue-600 hover:underline" target="_blank" rel="noreferrer">
+                {project.github_link}
               </a>
             </p>
-            <p><span className="font-semibold text-[#4F46E5]">Team Members:</span> {project.members.join(', ')}</p>
+            <p><span className="font-semibold text-[#4F46E5]">Team Members:</span> {project.members?.join(', ') || 'N/A'}</p>
           </div>
         </div>
 

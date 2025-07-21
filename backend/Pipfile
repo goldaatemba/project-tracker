@@ -15,11 +15,11 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 flask-mail = "*"
 flask-jwt-extended = "*"
-flask-cors = "*"
-flask = "*"
 flask-oauthlib = "*"
 python-dotenv = "*"
 google-auth = "*"
+flask = "*"
+flask-cors = "*"
 
 [dev-packages]
 
