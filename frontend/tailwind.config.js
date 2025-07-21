@@ -1,14 +1,4 @@
-<<<<<<< HEAD
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
 
-=======
 export default {
   content: [
     "./index.html",
@@ -29,4 +19,4 @@ export default {
   },
   plugins: [],
 }
->>>>>>> c5acff5f4348676bb1408a4f6917874969a506fd
+
