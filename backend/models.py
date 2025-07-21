@@ -3,23 +3,17 @@ from datetime import datetime
 from sqlalchemy import MetaData
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 metadata = MetaData()
 db = SQLAlchemy(metadata=metadata)
 
-
 class TokenBlocklist(db.Model):
     __tablename__ = 'token_blocklist'
-    
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(36), nullable=False, index=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-
-
 class User(db.Model):
     __tablename__ = 'users'
-    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(100), nullable=False, unique=True)
@@ -50,30 +44,23 @@ class User(db.Model):
             "created_at": self.created_at.isoformat()
         }
 
-
-
 class Cohort(db.Model):
     __tablename__ = 'cohorts'
-    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     projects = db.relationship('Project', backref='cohort', lazy=True)
 
-
 class Tech(db.Model):
     __tablename__ = 'techs'
-    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
 
     projects = db.relationship('Project', backref='tech', lazy=True)
 
-
 class Project(db.Model):
     __tablename__ = 'projects'
-    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
@@ -81,15 +68,22 @@ class Project(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)
     tech_id = db.Column(db.Integer, db.ForeignKey('techs.id'), nullable=True)
-
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     members = db.relationship('Member', backref='project', lazy=True)
 
-
 class Member(db.Model):
     __tablename__ = 'members'
-    
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "project_id": self.project_id,
+            "user_id": self.user_id,
+            "username": self.user.username,
+            "email": self.user.email,
+            "project_name": self.project.name
+        }

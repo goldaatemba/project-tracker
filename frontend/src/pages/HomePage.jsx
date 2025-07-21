@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import heroImg from "/hero-graphic.png";
-import colabImg from "/colab.png"; // ✅ Fixed image path
+import heroImg from "/projecthero.png";
+import colabImg from "/colab.png"; 
 import config from "../config";
 
 export default function Home() {
@@ -40,10 +40,10 @@ export default function Home() {
         </p>
 
         <Link
-          to="/projects"
+          to="/register"
           className="bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-800 hover:to-blue-950 text-white text-lg px-8 py-3 rounded-full shadow-lg transition transform hover:scale-105 duration-300"
         >
-          🚀 Get Started
+          Get Started
         </Link>
 
         <div className="mt-16">
@@ -76,7 +76,7 @@ export default function Home() {
               Browse Projects
             </Link>
             <Link
-              to="/submit"
+              to="/addproject"
               className="border border-[#4F9CF9] text-[#4F9CF9] font-semibold px-6 py-3 rounded-lg hover:bg-[#4F9CF9] hover:text-white transition"
             >
               Submit Project
@@ -107,35 +107,36 @@ export default function Home() {
             <p className="text-center text-gray-600">No featured projects available.</p>
           ) : (
             <div className="grid gap-8 md:grid-cols-3">
-              {featuredProjects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  whileHover={{ scale: 1.03 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
-                >
-                  <div className="p-4 flex flex-col justify-between h-full">
-                    <div>
-                      <h3 className="text-xl font-semibold text-[#043873]">{project.name}</h3>
-                      <p className="text-sm text-gray-800 mb-2">
-                        {project.description
-                          ? project.description.length > 60
-                            ? project.description.slice(0, 60).split(" ").slice(0, -1).join(" ") + "..."
-                            : project.description
-                          : "No description provided."}
-                      </p>
-                    </div>
-                    <div className="flex justify-between items-center mt-4">
-                      <p className="text-sm text-gray-700">
-                        <strong>By</strong> {project.author}
-                      </p>
-                      <Link
-                        to={`/projects/${project.id}`}
-                        className="text-sm text-[#4F9CF9] hover:underline"
-                      >
-                        View Details →
-                      </Link>
-                    </div>
-                  </div>
+  {featuredProjects.slice(0, 3).map((project) => (
+    <motion.div
+      key={project.id}
+      whileHover={{ scale: 1.03 }}
+      className="bg-white rounded-lg shadow-md overflow-hidden"
+    >
+      <div className="p-4 flex flex-col justify-between h-full">
+        <div>
+          <h3 className="text-xl font-semibold text-[#043873]">{project.name}</h3>
+          <p className="text-sm text-gray-800 mb-2">
+            {project.description
+              ? project.description.length > 60
+                ? project.description.slice(0, 60).split(" ").slice(0, -1).join(" ") + "..."
+                : project.description
+              : "No description provided."}
+          </p>
+        </div>
+        <div className="flex justify-between items-center mt-4">
+          <p className="text-sm text-gray-700">
+            <strong>By ~ </strong> {project.owner}
+          </p>
+          <Link
+            to={`/projects/${project.id}`}
+            className="text-sm text-[#4F9CF9] hover:underline"
+          >
+            View Details →
+          </Link>
+        </div>
+      </div>
+    
                 </motion.div>
               ))}
             </div>
