@@ -7,7 +7,7 @@ function Footer() {
         {/* Section 1: Brand */}
         <div>
           <h2 className="text-xl font-semibold text-[#FFE602] mb-2">
-            Moringa Projects
+            Project Management System (Partnered with Moringa)
           </h2>
           <p className="text-sm text-gray-300">
             Student Showcase Hub<br />
@@ -17,18 +17,18 @@ function Footer() {
 
         {/* Section 2: Moringa School */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Moringa School</h3>
+          <h3 className="text-lg text-[#FFE602] font-semibold mb-2">ProjectBank</h3>
           <ul className="space-y-1 text-sm text-gray-300">
             <li><a href="/about" className="hover:underline">About Moringa</a></li>
             <li><a href="#" className="hover:underline">Courses</a></li>
-            <li><a href="#" className="hover:underline">Career Support</a></li>
-            <li><a href="#" className="hover:underline">Contact</a></li>
+            <li><a href="/privacy" className="hover:underline">Privacy Policy</a></li>
+            <li><a href="/contact" className="hover:underline">Contact</a></li>
           </ul>
         </div>
 
         {/* Section 3: Projects */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Projects</h3>
+          <h3 className="text-lg text-[#FFE602] font-semibold mb-2">Projects</h3>
           <ul className="space-y-1 text-sm text-gray-300">
             <li><a href="#" className="hover:underline">Submit Project</a></li>
             <li><a href="#" className="hover:underline">Browse Projects</a></li>
@@ -39,13 +39,14 @@ function Footer() {
 
         {/* Section 4: Connect */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Connect</h3>
-          <p className="text-sm text-gray-300">© 2025 Moringa School. All rights reserved.</p>
+          <h3 className="text-lg text-[#FFE602] font-semibold mb-2">Connect</h3>
+          
           <p className="text-sm text-gray-300 mt-2">
             Built by <span className="text-[#FFE602] font-medium">Moringa Students</span>
           </p>
         </div>
       </div>
+      <div><p className="text-sm text-gray-300">© 2025 ProjectBank. All rights reserved.</p></div>
     </footer>
   );
 }

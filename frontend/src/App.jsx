@@ -17,6 +17,9 @@ import CohortProjects from './pages/Cohorts';
 import AddProjects from './pages/AddProjects';
 import ProjectForm from './pages/AddProjects';
 import SingleProject from './pages/SingleProject';
+import Contact from './pages/Contact';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import EditProfile from './pages/EditProfile';
 
 
 function App() {
@@ -38,6 +41,9 @@ function App() {
       <Route path="/addproject" element={<ProjectForm />} />
       <Route path="/projects/:id" element={<SingleProject />} />
       <Route path="/about" element={<About />} />
+      <Route path="/edit-profile" element={<EditProfile />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
       </Route>
     </Routes>
     <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
