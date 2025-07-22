@@ -59,7 +59,6 @@ def fetch_current_user():
 
     return jsonify(user.to_dict()), 200
 
-# Logout
 @auth_bp.route("/logout", methods=["DELETE"])
 @jwt_required()
 def modify_token():

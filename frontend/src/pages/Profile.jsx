@@ -82,7 +82,7 @@ const Profile = () => {
   return (
     <section className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white py-10">
       <div className="w-full max-w-5xl mx-auto flex flex-col">
-        {/* Cover and Profile Header */}
+
         <div className="relative">
           <img
             src="/cover.jpg"
@@ -117,9 +117,8 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Details Section */}
         <div className="mt-24 grid md:grid-cols-2 gap-10 px-4 md:px-0">
-          {/* Account Info */}
+
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
             <h2 className="text-xl font-semibold border-b pb-2">Account Info</h2>
             <div>
@@ -142,7 +141,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* My Projects */}
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-4">
             <h2 className="text-xl font-semibold border-b pb-2">My Projects</h2>
             {ownedProjects.length > 0 ? (
