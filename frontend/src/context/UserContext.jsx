@@ -3,7 +3,13 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { api_url } from "../config.json";
 
-export const UserContext = createContext();
+
+export const UserContext = createContext({
+  auth_token: null,
+  setAuthToken: () => {},
+  user: null,
+  setUser: () => {},
+});
 
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate();

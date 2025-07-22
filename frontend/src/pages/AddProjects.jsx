@@ -56,7 +56,7 @@ function ProjectForm() {
       });
 
       if (!res.ok) throw new Error('Failed to submit project');
-      toast.success('✅ Project submitted!');
+      toast.success(' Project submitted!');
 
       setFormData({
         projectName: '',

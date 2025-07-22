@@ -85,7 +85,6 @@ function Login() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-4 py-12">
-      <ToastContainer />
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl animate-fade-in">
         <div className="w-full md:w-1/2 p-10 bg-blue-100">
           <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Welcome Back</h2>

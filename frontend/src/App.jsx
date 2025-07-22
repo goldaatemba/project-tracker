@@ -9,13 +9,13 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { AdminDashboard , ManageCohorts, ManageProjects } from './pages/Admin';
+import { AdminDashboard , ManageProjects } from './pages/Admin';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import CohortProjects from './pages/Cohorts';
-import AddProjects from './pages/AddProjects';
 import ProjectForm from './pages/AddProjects';
 import SingleProject from './pages/SingleProject';
+import ManageCohorts from './components/ManageCohorts';
 import Contact from './pages/Contact';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import EditProfile from './pages/EditProfile';
@@ -47,7 +47,7 @@ function App() {
       <Route path="/privacy" element={<PrivacyPolicy />} />
       </Route>
     </Routes>
-    <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
+    <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
     </>
   )
 }

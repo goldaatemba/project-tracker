@@ -35,7 +35,6 @@ export function ManageCohorts() {
   const [cohorts, setCohorts] = useState([]);
   const [formData, setFormData] = useState({ name: "" });
 
-  // Load existing cohorts
   useEffect(() => {
     fetch(`${api_url}/cohorts`, {
       headers: { Authorization: `Bearer ${auth_token}` },
@@ -49,7 +48,6 @@ export function ManageCohorts() {
     setFormData({ name: e.target.value });
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 

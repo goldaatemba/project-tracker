@@ -21,7 +21,7 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'))  
+    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)  
 
     owned_projects = db.relationship('Project', backref='owner', lazy=True)
     memberships = db.relationship('Member', backref='user', lazy=True)
@@ -43,7 +43,9 @@ class User(db.Model):
             "email": self.email,
             "is_admin": self.is_admin,
             "is_blocked": self.is_blocked,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
+            "cohort_id": self.cohort_id,
+            "cohort": self.cohort.to_dict() if self.cohort else None
         }
 
 class Cohort(db.Model):
@@ -54,7 +56,16 @@ class Cohort(db.Model):
 
     projects = db.relationship('Project', backref='cohort', lazy=True)
     members = db.relationship('User', back_populates='cohort', lazy='dynamic')
-    users = db.relationship('User', back_populates='cohort')  # ✅ This is OK
+
+    def __repr__(self):
+        return f"<Cohort {self.id} - {self.name}>"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_at": self.created_at.isoformat()
+        }
     
 class Project(db.Model):
     __tablename__ = 'projects'

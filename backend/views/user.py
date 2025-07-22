@@ -113,7 +113,6 @@ def update_user():
     try:
         db.session.commit()
         
-        # Only send notification if email wasn't changed (would need separate verification)
         if 'email' not in updated_fields:
             msg = Message(
                 subject="Profile Updated",
@@ -160,13 +159,20 @@ def fetch_user_by_id(user_id):
 @user_bp.route("/users", methods=["GET"])
 @admin_required
 def fetch_all_users():
-    users = User.query.all()
+    unassigned = request.args.get("unassigned")
+    
+    if unassigned == "true":
+        users = User.query.filter(User.cohort_id == None).all()
+    else:
+        users = User.query.all()
+
     user_list = [{
         "id": user.id,
         "username": user.username,
         "email": user.email,
         "is_admin": user.is_admin,
         "is_blocked": user.is_blocked,
+        "cohort_id": user.cohort_id,
         "created_at": user.created_at
     } for user in users]
 

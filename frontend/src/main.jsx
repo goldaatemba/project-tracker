@@ -11,11 +11,12 @@ const GOOGLE_CLIENT_ID = '54790823933-pl1q47ujvtjdefs0bvnf37qk7rhl63ku.apps.goog
 
 function Root() {
   const [user, setUser] = useState(null); 
+  const [auth_token, setAuthToken] = useState(null);
 
   return (
     <React.StrictMode>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <UserContext.Provider value={{ user, setUser }}>
+      <UserContext.Provider value={{ auth_token, setAuthToken, user, setUser }}>
           <BrowserRouter>
             <App />
           </BrowserRouter>
