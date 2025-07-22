@@ -18,7 +18,7 @@ function ProjectForm() {
     fetch('http://localhost:5000/cohorts')
       .then((res) => res.json())
       .then((data) => setCohorts(data))
-      .catch(() => toast.error('⚠️ Failed to load cohorts.'));
+      .catch(() => toast.error(' Failed to load cohorts.'));
   }, []);
 
   const handleChange = (e) => {
@@ -67,7 +67,7 @@ function ProjectForm() {
         groupMembers: '',
       });
     } catch (err) {
-      toast.error('❌ Something went wrong!');
+      toast.error(' Something went wrong!');
     }
   };
 

@@ -3,15 +3,19 @@ from flask_jwt_extended import jwt_required
 from models import db, Cohort
 
 cohort_bp = Blueprint("cohort_bp", __name__)
-
 @cohort_bp.route("/cohorts", methods=["POST"])
 @jwt_required()
 def create_cohort():
     data = request.get_json()
-    cohort = Cohort(name=data["name"])
+
+    if not data or "name" not in data or not data["name"].strip():
+        return jsonify({"error": "Cohort name is required"}), 422
+
+    cohort = Cohort(name=data["name"].strip())
     db.session.add(cohort)
     db.session.commit()
-    return jsonify({"success": "Cohort created"}), 201
+
+    return jsonify({"success": "Cohort created", "id": cohort.id}), 201
 
 
 @cohort_bp.route("/cohorts/<int:id>", methods=["GET"])

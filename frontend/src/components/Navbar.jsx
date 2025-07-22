@@ -74,7 +74,6 @@ function Navbar() {
           ProjectBank
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           {studentLinks.map((link) => (
             <NavLink key={link.name} to={link.path} className={linkClass}>
@@ -103,7 +102,6 @@ function Navbar() {
           )}
         </div>
 
-        {/* Mobile Toggle */}
         <button
           className="md:hidden text-white focus:outline-none"
           onClick={toggleMenu}
@@ -112,7 +110,6 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2 bg-[#043873]">
           {studentLinks.map((link) => (

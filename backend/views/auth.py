@@ -31,10 +31,9 @@ def login():
         if not email or not password:
             return jsonify({'error': 'Missing credentials'}), 400
 
-        # Dummy example: replace with actual query
         user = User.query.filter_by(email=email).first()
 
-        if user and user.check_password(password):  # Assuming hashed check
+        if user and user.check_password(password):  
             access_token = create_access_token(identity=user.id)
             return jsonify({'access_token': access_token}), 200
         else:
@@ -94,7 +93,6 @@ def google_login():
     token = data.get('credential')
 
     try:
-        # Verify Google ID token
         idinfo = id_token.verify_oauth2_token(
             token,
             google_requests.Request(),
@@ -114,5 +112,5 @@ def google_login():
         return jsonify({'access_token': access_token}), 200
 
     except ValueError as e:
-        print("🔴 Google token validation failed:", e)
+        print(" Google token validation failed:", e)
         return jsonify({"error": "Invalid Google token"}), 400

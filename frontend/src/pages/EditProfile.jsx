@@ -52,7 +52,6 @@ const EditProfile = () => {
     e.preventDefault();
     const token = localStorage.getItem("access_token");
     
-    // Validate password change
     if (formData.newPassword && !formData.password) {
       toast.error("Current password is required to change password");
       return;
@@ -61,7 +60,6 @@ const EditProfile = () => {
     setIsSubmitting(true);
   
     try {
-      // Only send changed fields
       const updateData = {
         ...(formData.username && { username: formData.username }),
         ...(formData.email && { email: formData.email }),
@@ -70,7 +68,7 @@ const EditProfile = () => {
       };
 
       const res = await fetch('http://localhost:5000/update_user', {
-        method: 'PATCH', // Changed to PATCH
+        method: 'PATCH', 
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

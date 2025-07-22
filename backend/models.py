@@ -21,9 +21,11 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'))  
 
     owned_projects = db.relationship('Project', backref='owner', lazy=True)
     memberships = db.relationship('Member', backref='user', lazy=True)
+    cohort = db.relationship('Cohort', back_populates='members')
 
     def __repr__(self):
         return f"<User {self.id} - {self.username}>"
@@ -51,7 +53,9 @@ class Cohort(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     projects = db.relationship('Project', backref='cohort', lazy=True)
-
+    members = db.relationship('User', back_populates='cohort', lazy='dynamic')
+    users = db.relationship('User', back_populates='cohort')  # ✅ This is OK
+    
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)

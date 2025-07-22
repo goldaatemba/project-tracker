@@ -33,8 +33,9 @@ export function AdminDashboard() {
 export function ManageCohorts() {
   const { auth_token } = useContext(UserContext);
   const [cohorts, setCohorts] = useState([]);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+  const [formData, setFormData] = useState({ name: "" });
 
+  // Load existing cohorts
   useEffect(() => {
     fetch(`${api_url}/cohorts`, {
       headers: { Authorization: `Bearer ${auth_token}` },
@@ -44,59 +45,65 @@ export function ManageCohorts() {
       .catch(() => toast.error("Failed to load cohorts"));
   }, [auth_token]);
 
+  const handleChange = (e) => {
+    setFormData({ name: e.target.value });
+  };
+
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.name.trim()) {
+      toast.error("Cohort name cannot be empty");
+      return;
+    }
+
     fetch(`${api_url}/cohorts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth_token}`,
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ name: formData.name.trim() }),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to create cohort");
-        toast.success("Cohort created!");
-        setFormData({ name: '', description: '' });
+        if (!res.ok) return res.json().then(data => { throw new Error(data.error || "Failed to create cohort") });
         return res.json();
       })
-      .then((newCohort) => setCohorts(prev => [...prev, newCohort]))
-      .catch(() => toast.error("Failed to create cohort"));
+      .then((newCohort) => {
+        toast.success("Cohort created!");
+        setCohorts((prev) => [...prev, { id: newCohort.id, name: formData.name.trim() }]);
+        setFormData({ name: "" });
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (
-    <div className="bg-blue-100 min-h-screen p-8">
-      <h1 className="text-2xl font-bold text-blue-900 mb-6">Manage Cohorts</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Manage Cohorts</h2>
+
+      <form onSubmit={handleSubmit} className="mb-6">
         <input
           type="text"
-          placeholder="Name"
-          className="w-full p-2 border rounded"
+          placeholder="Cohort name"
           value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          required
+          onChange={handleChange}
+          className="border rounded p-2 mr-2"
         />
-        <input
-          type="text"
-          placeholder="Description"
-          className="w-full p-2 border rounded"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          required
-        />
-        <button type="submit" className="bg-blue-800 text-white px-4 py-2 rounded">Create Cohort</button>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          Add Cohort
+        </button>
       </form>
-      <ul className="space-y-4">
+
+      <ul>
         {cohorts.map((cohort) => (
-          <li key={cohort.id} className="bg-white p-4 rounded-lg shadow">
-            <p className="text-blue-800"><strong>Name:</strong> {cohort.name}</p>
-            <p className="text-blue-600"><strong>Description:</strong> {cohort.description}</p>
-          </li>
+          <li key={cohort.id}>{cohort.name}</li>
         ))}
       </ul>
     </div>
   );
 }
+
 
 export function ManageProjects() {
   const { auth_token } = useContext(UserContext);

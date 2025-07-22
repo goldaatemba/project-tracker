@@ -59,7 +59,6 @@ def update_user():
     if not data or not isinstance(data, dict):
         return jsonify({"error": "Invalid JSON data"}), 400
 
-    # Input validation
     errors = {}
     if 'username' in data and not isinstance(data['username'], str):
         errors['username'] = "Must be a string"
@@ -77,13 +76,11 @@ def update_user():
     if errors:
         return jsonify({"error": "Validation failed", "details": errors}), 400
 
-    # Admin fields check
     requesting_user = User.query.get(current_user_id)
     if any(field in data for field in ['is_admin', 'is_blocked']):
         if not requesting_user.is_admin:
             return jsonify({"error": "Admin privileges required"}), 403
 
-    # Partial updates
     updated_fields = []
     if 'username' in data:
         user.username = data['username']
@@ -91,10 +88,8 @@ def update_user():
     
     if 'email' in data:
         if data['email'] != user.email:
-            # Email change requires verification
             user.email = data['email']
             updated_fields.append('email')
-            # Here you would generate and send verification token
     
     if 'newPassword' in data:
         if 'password' not in data:
@@ -104,7 +99,6 @@ def update_user():
         user.password = generate_password_hash(data['newPassword'])
         updated_fields.append('password')
 
-    # Only allow admins to change these fields
     if requesting_user.is_admin:
         if 'is_admin' in data:
             user.is_admin = data['is_admin']
@@ -146,7 +140,6 @@ def update_user():
         return jsonify({"error": "Failed to update profile"}), 500
     
 
-# Get a single user by ID
 @user_bp.route("/users/<int:user_id>", methods=["GET"])
 def fetch_user_by_id(user_id):
     user = User.query.get(user_id)
@@ -164,7 +157,6 @@ def fetch_user_by_id(user_id):
     }), 200
 
 
-# Get all users
 @user_bp.route("/users", methods=["GET"])
 @admin_required
 def fetch_all_users():
@@ -181,7 +173,6 @@ def fetch_all_users():
     return jsonify(user_list), 200
 
 
-# Delete the current user's profile and related data
 @user_bp.route("/delete_user_profile", methods=["DELETE"])
 @jwt_required()
 def delete_user():
@@ -191,22 +182,18 @@ def delete_user():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    # Delete related projects
     for project in Project.query.filter_by(user_id=current_user_id).all():
         db.session.delete(project)
 
-    # Delete related cohorts
     for cohort in Cohort.query.filter_by(user_id=current_user_id).all():
         db.session.delete(cohort)
 
-    # Delete related members
     for member in Member.query.filter_by(user_id=current_user_id).all():
         db.session.delete(member)
 
 
     db.session.commit()
 
-    # Delete the user last
     db.session.delete(user)
     db.session.commit()
 
