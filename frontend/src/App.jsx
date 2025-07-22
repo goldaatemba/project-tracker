@@ -17,6 +17,7 @@ import ProjectForm from './pages/AddProjects';
 import SingleProject from './pages/SingleProject';
 import ManageCohorts from './components/ManageCohorts';
 import  ManageUsers  from './components/ManageUsers';
+import EditProject from './components/EditProject';
 import Contact from './pages/Contact';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import EditProfile from './pages/EditProfile';
@@ -36,6 +37,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/edit-project/:id" element={<EditProject />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/cohorts" element={<CohortProjects />} />
       <Route path="/profile" element={<Profile />} />
