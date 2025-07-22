@@ -44,8 +44,10 @@ def get_project(id):
         "name": project.name,
         "description": project.description,
         "github_link": project.github_link,
-        "cohort_id": project.cohort_id,
-        "cohort_name": project.cohort.name if project.cohort else None,
+        "cohort": {
+                "id": project.cohort.id,
+                "name": project.cohort.name
+            } if project.cohort else None,
         "stack": project.tech if project.tech else "Unknown",
         "created_at": project.created_at,
         "owner_id": project.owner_id,
@@ -57,22 +59,27 @@ def get_project(id):
 @project_bp.route("/projects", methods=["GET"])
 def get_all_projects():
     projects = Project.query.all()
-    return jsonify([
-        {
+    
+    result = []
+    for p in projects:
+        result.append({
             "id": p.id,
             "name": p.name,
             "description": p.description,
             "github_link": p.github_link,
             "cohort_id": p.cohort_id,
-            "cohort_name": p.cohort.name if p.cohort else None,
-            "stack": p.tech if p.tech else "Unknown",
+            "cohort": {
+                "id": p.cohort.id,
+                "name": p.cohort.name
+            } if p.cohort else None,
+            "stack": p.tech or "Unknown",  # alias 'tech' as 'stack'
             "created_at": p.created_at.strftime('%Y-%m-%d') if p.created_at else None,
             "owner_id": p.owner_id,
             "owner": p.owner.username if p.owner else None,
             "members": [member.user.username for member in p.members if member.user]
-        } for p in projects
-    ])
+        })
 
+    return jsonify(result)
 
 @project_bp.route("/projects/<int:id>", methods=["PATCH"])
 @jwt_required()

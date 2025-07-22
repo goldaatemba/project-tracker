@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ProjectForm() {
+function AddProjects() {
   const [formData, setFormData] = useState({
     projectName: '',
     description: '',
     githubLink: '',
-    cohortSelection: '',
+    cohortId: '',
     techStack: '',
     groupMembers: '',
   });
 
   const [cohorts, setCohorts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/cohorts')
+    fetch('http://localhost:5000/cohorts', {
+      credentials: 'include',
+    })
       .then((res) => res.json())
       .then((data) => setCohorts(data))
-      .catch(() => toast.error(' Failed to load cohorts.'));
+      .catch(() => toast.error('Failed to load cohorts.'));
   }, []);
 
   const handleChange = (e) => {
@@ -32,18 +36,21 @@ function ProjectForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { projectName, description, githubLink, cohortSelection, techStack } = formData;
+    const { projectName, description, githubLink, cohortId, techStack, groupMembers } = formData;
 
-    if (!projectName || !description || !cohortSelection || !techStack) {
+    if (!projectName || !description || !cohortId || !techStack) {
       toast.error('Please fill in all required fields.');
       return;
     }
 
-    const cohortIsValid = cohorts.some((c) => c.name === cohortSelection);
-    if (!cohortIsValid) {
-      toast.error('Selected cohort does not exist.');
-      return;
-    }
+    const payload = {
+      name: projectName,
+      description,
+      github_link: githubLink,
+      cohort_id: parseInt(cohortId),
+      tech: techStack,
+      group_members: groupMembers,
+    };
 
     try {
       const res = await fetch('http://localhost:5000/projects', {
@@ -52,22 +59,26 @@ function ProjectForm() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error('Failed to submit project');
-      toast.success(' Project submitted!');
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to submit project');
+      }
 
+      toast.success('Project submitted!');
       setFormData({
         projectName: '',
         description: '',
         githubLink: '',
-        cohortSelection: '',
+        cohortId: '',
         techStack: '',
         groupMembers: '',
       });
+      navigate('/projects');
     } catch (err) {
-      toast.error(' Something went wrong!');
+      toast.error(err.message || 'Something went wrong!');
     }
   };
 
@@ -83,7 +94,6 @@ function ProjectForm() {
             value={formData.projectName}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-lg"
-            placeholder="e.g., My Awesome App"
             required
           />
         </div>
@@ -95,7 +105,6 @@ function ProjectForm() {
             value={formData.description}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-lg"
-            placeholder="Describe the project..."
             rows={4}
             required
           />
@@ -116,15 +125,15 @@ function ProjectForm() {
         <div>
           <label className="block mb-1 font-medium">Cohort *</label>
           <select
-            name="cohortSelection"
-            value={formData.cohortSelection}
+            name="cohortId"
+            value={formData.cohortId}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-lg"
             required
           >
             <option value="">-- Select Cohort --</option>
             {cohorts.map((cohort) => (
-              <option key={cohort.id} value={cohort.name}>
+              <option key={cohort.id} value={cohort.id}>
                 {cohort.name}
               </option>
             ))}
@@ -174,4 +183,4 @@ function ProjectForm() {
   );
 }
 
-export default ProjectForm;
+export default AddProjects;

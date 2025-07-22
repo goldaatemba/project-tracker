@@ -24,21 +24,23 @@ def create_cohort():
 
 @cohort_bp.route("/cohorts", methods=["GET"])
 def get_all_cohorts():
-    cohorts = Cohort.query.all()
-    return jsonify([
-        {
-            "id": c.id,
-            "name": c.name,
-            "members": [
-                {
-                    "id": m.id,
-                    "username": m.username,
-                    "email": m.email
-                } for m in c.members
-            ]
-        } for c in cohorts
-    ])
-
+    try:
+        cohorts = Cohort.query.all()
+        return jsonify([
+            {
+                "id": c.id,
+                "name": c.name,
+                "members": [
+                    {
+                        "id": m.id,
+                        "username": m.username,
+                        "email": m.email
+                    } for m in c.members
+                ]
+            } for c in cohorts
+        ])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @cohort_bp.route("/cohorts/<int:id>", methods=["GET"])
 def get_cohort(id):

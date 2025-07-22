@@ -1,5 +1,7 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SingleProject() {
   const { id } = useParams();
@@ -7,53 +9,85 @@ function SingleProject() {
 
   useEffect(() => {
     fetch(`http://localhost:5000/projects/${id}`)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error("Project not found");
         return res.json();
       })
-      .then(setProject)
-      .catch(err => console.error(err));
+      .then((data) => {
+        setProject(data);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to load project");
+      });
   }, [id]);
 
   if (!project) {
     return (
-      <div className="p-8 text-center text-gray-600">
-        <p className="text-lg">Loading project...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <ToastContainer />
+        <p className="text-gray-500 text-lg">Loading project...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#e0f2fe] to-[#f0f9ff] py-10 px-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-8 transition hover:shadow-blue-200">
-        <h1 className="text-3xl font-bold text-[#043873] mb-4">{project.name}</h1>
-        <p className="text-gray-700 mb-6">{project.description}</p>
+    <div className="min-h-screen bg-gray-50 px-6 py-10 md:px-10">
+      <ToastContainer />
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6">
+        <Link
+          to="/projects"
+          className="text-blue-600 hover:underline text-sm font-medium"
+        >
+          ← Back to Projects
+        </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800 text-base">
-          <div>
-            <p><span className="font-semibold text-[#4F46E5]">Tech Stack:</span> {project.tech_stack}</p>
-            <p><span className="font-semibold text-[#4F46E5]">Created:</span> {project.created_at}</p>
-            <p><span className="font-semibold text-[#4F46E5]">Cohort:</span> {project.cohort_name}</p>
-            <p><span className="font-semibold text-[#4F46E5]">Author:</span> {project.owner}</p>
-          </div>
-          <div>
-            <p>
-              <span className="font-semibold text-[#4F46E5]">GitHub: </span>
-              <a href={project.github_link} className="text-blue-600 hover:underline" target="_blank" rel="noreferrer">
-                {project.github_link}
-              </a>
-            </p>
-            <p><span className="font-semibold text-[#4F46E5]">Team Members:</span> {project.members?.join(', ') || 'N/A'}</p>
-          </div>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#043873] mb-1">
+            {project.name}
+          </h1>
+          <p className="text-sm text-gray-400">
+            Created on{" "}
+            {new Date(project.created_at).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
         </div>
 
-        <div className="mt-8">
-          <button
-            onClick={() => window.history.back()}
-            className="bg-[#043873] text-white px-6 py-2 rounded-lg hover:bg-[#032f62] transition"
+        <div className="grid md:grid-cols-2 gap-4">
+          {project.stack && (
+            <div>
+              <span className="text-gray-600 font-medium">Stack:</span>{" "}
+              <span className="text-blue-700">{project.stack}</span>
+            </div>
+          )}
+
+          {project.cohort?.name && (
+            <div>
+              <span className="text-gray-600 font-medium">Cohort:</span>{" "}
+              <span className="text-green-700">{project.cohort.name}</span>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold text-gray-700 mb-1">
+            Description
+          </h2>
+          <p className="text-gray-700 leading-relaxed">{project.description}</p>
+        </div>
+
+        <div className="pt-4">
+          <a
+            href={project.github_link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#043873] hover:bg-[#022d5b] text-white font-semibold px-5 py-2 rounded-lg transition"
           >
-            ← Back to Projects
-          </button>
+            🔗 View on GitHub
+          </a>
         </div>
       </div>
     </div>

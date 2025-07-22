@@ -64,7 +64,14 @@ class Cohort(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
+            "members": [
+            {
+                "id": member.id,
+                "username": member.username,
+                "email": member.email
+            } for member in self.members
+        ]
         }
     
 class Project(db.Model):
