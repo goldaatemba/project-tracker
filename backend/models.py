@@ -114,3 +114,12 @@ class Comment(db.Model):
 
     user = db.relationship('User', backref='comments')
     project = db.relationship('Project', backref='comments')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "created_at": self.created_at.isoformat(),
+            "user": self.user.to_dict() if self.user else None,
+            "user_id": self.user_id,
+        }
