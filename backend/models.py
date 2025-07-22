@@ -55,7 +55,7 @@ class Cohort(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     projects = db.relationship('Project', backref='cohort', lazy=True)
-    members = db.relationship('User', back_populates='cohort', lazy='dynamic')
+    members = db.relationship('User', back_populates='cohort', lazy=True)
 
     def __repr__(self):
         return f"<Cohort {self.id} - {self.name}>"

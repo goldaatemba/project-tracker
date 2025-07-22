@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { api_url } from "../config.json";
+// import { api_url } from "../config.json";
 import { UserContext } from "../context/UserContext";
 import { toast } from "react-toastify";
 
+const api_url = "http://127.0.0.1:5000"
 export function AdminDashboard() {
   const dashboardItems = [
     { to: "/admin/manage-cohorts", title: "Manage Cohorts", description: "Add, edit, or delete cohorts." },
     { to: "/admin/manage-projects", title: "Manage Projects", description: "View and manage all projects." },
+    { to: "/admin/manage-users", title: "Manage Users", description: "Add, edit, or delete users." }
   ];
 
   return (
@@ -29,79 +31,6 @@ export function AdminDashboard() {
     </div>
   );
 }
-
-export function ManageCohorts() {
-  const { auth_token } = useContext(UserContext);
-  const [cohorts, setCohorts] = useState([]);
-  const [formData, setFormData] = useState({ name: "" });
-
-  useEffect(() => {
-    fetch(`${api_url}/cohorts`, {
-      headers: { Authorization: `Bearer ${auth_token}` },
-    })
-      .then((res) => res.json())
-      .then(setCohorts)
-      .catch(() => toast.error("Failed to load cohorts"));
-  }, [auth_token]);
-
-  const handleChange = (e) => {
-    setFormData({ name: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!formData.name.trim()) {
-      toast.error("Cohort name cannot be empty");
-      return;
-    }
-
-    fetch(`${api_url}/cohorts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${auth_token}`,
-      },
-      body: JSON.stringify({ name: formData.name.trim() }),
-    })
-      .then((res) => {
-        if (!res.ok) return res.json().then(data => { throw new Error(data.error || "Failed to create cohort") });
-        return res.json();
-      })
-      .then((newCohort) => {
-        toast.success("Cohort created!");
-        setCohorts((prev) => [...prev, { id: newCohort.id, name: formData.name.trim() }]);
-        setFormData({ name: "" });
-      })
-      .catch((err) => toast.error(err.message));
-  };
-
-  return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Manage Cohorts</h2>
-
-      <form onSubmit={handleSubmit} className="mb-6">
-        <input
-          type="text"
-          placeholder="Cohort name"
-          value={formData.name}
-          onChange={handleChange}
-          className="border rounded p-2 mr-2"
-        />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Add Cohort
-        </button>
-      </form>
-
-      <ul>
-        {cohorts.map((cohort) => (
-          <li key={cohort.id}>{cohort.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 
 export function ManageProjects() {
   const { auth_token } = useContext(UserContext);
@@ -125,6 +54,68 @@ export function ManageProjects() {
             <p className="text-blue-800"><strong>Name:</strong> {project.name}</p>
             <p className="text-blue-600"><strong>Description:</strong> {project.description}</p>
             <p className="text-blue-600"><strong>GitHub Link:</strong> {project.github_link}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function ManageUsers() {
+  const { auth_token } = useContext(UserContext);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetch(`${api_url}/users`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${auth_token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data); 
+        setUsers(Array.isArray(data) ? data : []); 
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        toast.error("Failed to load users");
+        setUsers([]); 
+      });
+  }, [auth_token]);
+
+  const handleDelete = (userId) => {
+    fetch(`${api_url}/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${auth_token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to delete user");
+        toast.success("User deleted!");
+        setUsers(users.filter((user) => user.id !== userId)); 
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+        toast.error("Failed to delete user");
+      });
+  };
+
+  return (
+    <div className="bg-blue-100 min-h-screen p-8">
+      <h1 className="text-2xl font-bold text-blue-900 mb-6">Manage Users</h1>
+      <ul className="space-y-4">
+        {users.map((user) => (
+          <li key={user.id} className="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+            <div>
+              <p className="text-blue-800"><strong>Name:</strong> {user.name}</p>
+              <p className="text-blue-600"><strong>Email:</strong> {user.email}</p>
+            </div>
+            <button
+              onClick={() => handleDelete(user.id)}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>

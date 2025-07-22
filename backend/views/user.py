@@ -157,7 +157,6 @@ def fetch_user_by_id(user_id):
 
 
 @user_bp.route("/users", methods=["GET"])
-@admin_required
 def fetch_all_users():
     unassigned = request.args.get("unassigned")
     
