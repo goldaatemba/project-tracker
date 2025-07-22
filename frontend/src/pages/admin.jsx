@@ -131,64 +131,57 @@ export function ManageProjects() {
 export function ManageUsers() {
   const { auth_token } = useContext(UserContext);
   const [users, setUsers] = useState([]);
-  const [formData, setFormData] = useState({ name: '', email: '' });
 
   useEffect(() => {
     fetch(`${api_url}/users`, {
       headers: { Authorization: `Bearer ${auth_token}` },
     })
       .then((res) => res.json())
-      .then(setUsers)
-      .catch(() => toast.error("Failed to load users"));
+      .then((data) => {
+        console.log(data); 
+        setUsers(Array.isArray(data) ? data : []); 
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        toast.error("Failed to load users");
+        setUsers([]); 
+      });
   }, [auth_token]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`${api_url}/users`, {
-      method: "POST",
+  const handleDelete = (userId) => {
+    fetch(`${api_url}/users/${userId}`, {
+      method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${auth_token}`,
       },
-      body: JSON.stringify(formData),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to create user");
-        toast.success("User created!");
-        setFormData({ name: '', email: '' });
-        return res.json();
+        if (!res.ok) throw new Error("Failed to delete user");
+        toast.success("User deleted!");
+        setUsers(users.filter((user) => user.id !== userId)); 
       })
-      .then((newUser) => setUsers(prev => [...prev, newUser]))
-      .catch(() => toast.error("Failed to create user"));
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+        toast.error("Failed to delete user");
+      });
   };
 
   return (
     <div className="bg-blue-100 min-h-screen p-8">
       <h1 className="text-2xl font-bold text-blue-900 mb-6">Manage Users</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full p-2 border rounded"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          required
-        />
-        <button type="submit" className="bg-blue-800 text-white px-4 py-2 rounded">Create User</button>
-      </form>
       <ul className="space-y-4">
         {users.map((user) => (
-          <li key={user.id} className="bg-white p-4 rounded-lg shadow">
-            <p className="text-blue-800"><strong>Name:</strong> {user.name}</p>
-            <p className="text-blue-600"><strong>Email:</strong> {user.email}</p>
+          <li key={user.id} className="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+            <div>
+              <p className="text-blue-800"><strong>Name:</strong> {user.name}</p>
+              <p className="text-blue-600"><strong>Email:</strong> {user.email}</p>
+            </div>
+            <button
+              onClick={() => handleDelete(user.id)}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
