@@ -9,7 +9,6 @@ function Navbar() {
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
-  // Check for token on mount
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     setIsLoggedIn(!!token);
@@ -75,7 +74,6 @@ function Navbar() {
           ProjectBank
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           {studentLinks.map((link) => (
             <NavLink key={link.name} to={link.path} className={linkClass}>
@@ -104,7 +102,6 @@ function Navbar() {
           )}
         </div>
 
-        {/* Mobile Toggle */}
         <button
           className="md:hidden text-white focus:outline-none"
           onClick={toggleMenu}
@@ -113,7 +110,6 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2 bg-[#043873]">
           {studentLinks.map((link) => (
@@ -121,7 +117,7 @@ function Navbar() {
               key={link.name}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className="block text-white hover:text-yellow-400 py-2 border-b border-white"
+              className="block text-white hover:text-yellow-400 py-2 text-center border-b border-white w-full"
             >
               {link.name}
             </NavLink>

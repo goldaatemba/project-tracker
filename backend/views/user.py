@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from models import db, User, Project, Cohort, Member, Tech
+from models import db, User, Project, Cohort, Member
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, set_access_cookies
 from flask_mail import Message
@@ -59,7 +59,6 @@ def update_user():
     if not data or not isinstance(data, dict):
         return jsonify({"error": "Invalid JSON data"}), 400
 
-    # Input validation
     errors = {}
     if 'username' in data and not isinstance(data['username'], str):
         errors['username'] = "Must be a string"
@@ -77,13 +76,11 @@ def update_user():
     if errors:
         return jsonify({"error": "Validation failed", "details": errors}), 400
 
-    # Admin fields check
     requesting_user = User.query.get(current_user_id)
     if any(field in data for field in ['is_admin', 'is_blocked']):
         if not requesting_user.is_admin:
             return jsonify({"error": "Admin privileges required"}), 403
 
-    # Partial updates
     updated_fields = []
     if 'username' in data:
         user.username = data['username']
@@ -91,11 +88,8 @@ def update_user():
     
     if 'email' in data:
         if data['email'] != user.email:
-            # Email change requires verification
             user.email = data['email']
-            user.email_verified = False
             updated_fields.append('email')
-            # Here you would generate and send verification token
     
     if 'newPassword' in data:
         if 'password' not in data:
@@ -105,7 +99,6 @@ def update_user():
         user.password = generate_password_hash(data['newPassword'])
         updated_fields.append('password')
 
-    # Only allow admins to change these fields
     if requesting_user.is_admin:
         if 'is_admin' in data:
             user.is_admin = data['is_admin']
@@ -120,7 +113,6 @@ def update_user():
     try:
         db.session.commit()
         
-        # Only send notification if email wasn't changed (would need separate verification)
         if 'email' not in updated_fields:
             msg = Message(
                 subject="Profile Updated",
@@ -138,7 +130,6 @@ def update_user():
                 "email": user.email,
                 "is_admin": user.is_admin,
                 "is_blocked": user.is_blocked,
-                "email_verified": user.email_verified
             }
         }), 200
 
@@ -147,8 +138,7 @@ def update_user():
         app.logger.error(f"User update failed: {str(e)}")
         return jsonify({"error": "Failed to update profile"}), 500
     
-    
-# Get a single user by ID
+
 @user_bp.route("/users/<int:user_id>", methods=["GET"])
 def fetch_user_by_id(user_id):
     user = User.query.get(user_id)
@@ -166,24 +156,29 @@ def fetch_user_by_id(user_id):
     }), 200
 
 
-# Get all users
 @user_bp.route("/users", methods=["GET"])
 @admin_required
 def fetch_all_users():
-    users = User.query.all()
+    unassigned = request.args.get("unassigned")
+    
+    if unassigned == "true":
+        users = User.query.filter(User.cohort_id == None).all()
+    else:
+        users = User.query.all()
+
     user_list = [{
         "id": user.id,
         "username": user.username,
         "email": user.email,
         "is_admin": user.is_admin,
         "is_blocked": user.is_blocked,
+        "cohort_id": user.cohort_id,
         "created_at": user.created_at
     } for user in users]
 
     return jsonify(user_list), 200
 
 
-# Delete the current user's profile and related data
 @user_bp.route("/delete_user_profile", methods=["DELETE"])
 @jwt_required()
 def delete_user():
@@ -193,25 +188,18 @@ def delete_user():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    # Delete related projects
     for project in Project.query.filter_by(user_id=current_user_id).all():
         db.session.delete(project)
 
-    # Delete related cohorts
     for cohort in Cohort.query.filter_by(user_id=current_user_id).all():
         db.session.delete(cohort)
 
-    # Delete related members
     for member in Member.query.filter_by(user_id=current_user_id).all():
         db.session.delete(member)
 
-    # Delete related techs
-    for tech in Tech.query.filter_by(user_id=current_user_id).all():
-        db.session.delete(tech)
 
     db.session.commit()
 
-    # Delete the user last
     db.session.delete(user)
     db.session.commit()
 

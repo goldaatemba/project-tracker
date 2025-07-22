@@ -3,17 +3,32 @@ import { toast } from "react-toastify";
 
 const CohortContext = createContext();
 
+const api_url = import.meta.env.VITE_API_URL;
+
 export const CohortProvider = ({ children }) => {
   const [cohorts, setCohorts] = useState([]);
+  const [unassignedUsers, setUnassignedUsers] = useState([]);
 
-  function fetch_cohorts() {
+  const fetch_cohorts = () => {
     fetch(`${api_url}/cohorts`)
       .then(res => res.json())
-      .then(data => setCohorts(data))
+      .then(setCohorts)
       .catch(() => toast.error("Failed to load cohorts"));
-  }
+  };
 
-  function create_cohort(name, token) {
+  const fetch_unassigned_users = (token) => {
+    fetch(`${api_url}/cohorts/unassigned`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then(setUnassignedUsers)
+      .catch(() => toast.error("Failed to load unassigned users"));
+  };
+
+  const create_cohort = (name, token) => {
+
     toast.loading("Creating cohort...");
     fetch(`${api_url}/cohorts`, {
       method: "POST",
@@ -23,20 +38,26 @@ export const CohortProvider = ({ children }) => {
       },
       body: JSON.stringify({ name }),
     })
-      .then(() => {
+
+      .then(async (res) => {
         toast.dismiss();
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Failed to create cohort");
+        }
         toast.success("Cohort created");
         fetch_cohorts();
       })
-      .catch(() => {
+      .catch((err) => {
         toast.dismiss();
-        toast.error("Failed to create cohort");
+        toast.error(err.message);
       });
-  }
+  };
 
-  function update_cohort(id, name, token) {
+  const update_cohort = (id, name, token) => {
     toast.loading("Updating cohort...");
-    fetch(`${api_url}/cohorts${id}`, {
+    fetch(`${api_url}/cohorts/${id}`, {
+
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -53,9 +74,11 @@ export const CohortProvider = ({ children }) => {
         toast.dismiss();
         toast.error("Failed to update cohort");
       });
-  }
 
-  function delete_cohort(id, token) {
+  };
+
+  const delete_cohort = (id, token) => {
+
     toast.loading("Deleting cohort...");
     fetch(`${api_url}/cohorts/${id}`, {
       method: "DELETE",
@@ -72,14 +95,82 @@ export const CohortProvider = ({ children }) => {
         toast.dismiss();
         toast.error("Failed to delete cohort");
       });
-  }
+
+  };
+
+  const add_user_to_cohort = (cohort_id, user_id, token) => {
+    toast.loading("Adding user to cohort...");
+    fetch(`${api_url}/cohorts/${cohort_id}/add_user`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ user_id }),
+    })
+      .then(async (res) => {
+        toast.dismiss();
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Failed to add user");
+        }
+        toast.success("User added to cohort");
+        fetch_cohorts();
+        fetch_unassigned_users(token);
+      })
+      .catch((err) => {
+        toast.dismiss();
+        toast.error(err.message);
+      });
+  };
+
+  const remove_user_from_cohort = (user_id, token) => {
+    toast.loading("Removing user from cohort...");
+    fetch(`${api_url}/cohorts/remove_user`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ user_id }),
+    })
+      .then(async (res) => {
+        toast.dismiss();
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "Failed to remove user");
+        }
+        toast.success("User removed from cohort");
+        fetch_cohorts();
+        fetch_unassigned_users(token);
+      })
+      .catch((err) => {
+        toast.dismiss();
+        toast.error(err.message);
+      });
+  };
+
 
   useEffect(() => {
     fetch_cohorts();
   }, []);
 
   return (
-    <CohortContext.Provider value={{ cohorts, create_cohort, update_cohort, delete_cohort }}>
+
+    <CohortContext.Provider
+      value={{
+        cohorts,
+        unassignedUsers,
+        fetch_cohorts,
+        fetch_unassigned_users,
+        create_cohort,
+        update_cohort,
+        delete_cohort,
+        add_user_to_cohort,
+        remove_user_from_cohort,
+      }}
+    >
+
       {children}
     </CohortContext.Provider>
   );

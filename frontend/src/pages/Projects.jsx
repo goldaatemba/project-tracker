@@ -6,7 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 function Projects() {
   const [projects, setProjects] = useState([]);
-  const [selectedStack, setSelectedStack] = useState("All");
+  const [techs, setTechs] = useState(["All"]);
+  const [cohorts, setCohorts] = useState(["All"]);
+  const [selectedTech, setSelectedTech] = useState("All");
+  const [selectedCohort, setSelectedCohort] = useState("All");
+  const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
     fetch("http://localhost:5000/projects")
@@ -14,59 +18,95 @@ function Projects() {
         if (!res.ok) throw new Error("Failed to fetch projects");
         return res.json();
       })
-      .then((data) => setProjects(data))
-      .catch((error) => {
-        console.error("Error fetching projects:", error);
-        toast.error("Failed to load projects");
+      .then((data) => {
+        setProjects(data);
+
+        const uniqueTechs = new Set(data.map((p) => p.stack).filter(Boolean));
+        const uniqueCohorts = new Set(
+          data.map((p) => p.cohort?.name).filter(Boolean)
+        );
+
+        setTechs(["All", ...Array.from(uniqueTechs)]);
+        setCohorts(["All", ...Array.from(uniqueCohorts)]);
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to load projects.");
       });
   }, []);
 
-  const stacks = ["All", "Fullstack", "Android"];
-  const filteredProjects =
-    selectedStack === "All"
-      ? projects
-      : projects.filter((project) =>
-          project.stack.toLowerCase().includes(selectedStack.toLowerCase())
-        );
+  const filteredProjects = projects
+    .filter((project) =>
+      selectedTech === "All"
+        ? true
+        : project.stack?.toLowerCase() === selectedTech.toLowerCase()
+    )
+    .filter((project) =>
+      selectedCohort === "All"
+        ? true
+        : project.cohort?.name === selectedCohort
+    )
+    .sort((a, b) => {
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#e8f1fa] to-white py-8 px-4 md:px-10">
+      <ToastContainer />
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex flex-col items-center justify-center text-center mb-12">
           <h1 className="text-3xl md:text-5xl font-bold text-[#043873] mb-4">
             Explore Student Projects
           </h1>
           <p className="text-gray-600 text-4xl md:text-base max-w-2xl">
             Browse innovative projects built by Moringa School students across
-            various cohorts. Tap into their creativity, stack choices, and
-            execution!
+            various cohorts.
           </p>
         </div>
 
-        {/* Filters & Button */}
+        {/* Filters and Add Button */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
           <div className="flex gap-4 flex-wrap justify-center">
+            {/* Tech Filter */}
             <select
               className="p-2 border border-blue-300 rounded bg-white shadow-sm"
-              onChange={(e) => setSelectedStack(e.target.value)}
+              onChange={(e) => setSelectedTech(e.target.value)}
+              value={selectedTech}
             >
-              {stacks.map((stack) => (
-                <option key={stack} value={stack}>
-                  {stack}
+              {techs.map((tech) => (
+                <option key={tech} value={tech}>
+                  {tech}
                 </option>
               ))}
             </select>
 
-            <select className="p-2 border border-blue-300 rounded bg-white shadow-sm">
-              <option value="">Tech Stack</option>
-              <option value="react">React</option>
-              <option value="flask">Flask</option>
-              <option value="django">Django</option>
-              <option value="node">Node.js</option>
+            {/* Cohort Filter */}
+            <select
+              className="p-2 border border-blue-300 rounded bg-white shadow-sm"
+              onChange={(e) => setSelectedCohort(e.target.value)}
+              value={selectedCohort}
+            >
+              {cohorts.map((cohort) => (
+                <option key={cohort} value={cohort}>
+                  {cohort}
+                </option>
+              ))}
+            </select>
+
+            {/* Sort Order */}
+            <select
+              className="p-2 border border-blue-300 rounded bg-white shadow-sm"
+              onChange={(e) => setSortOrder(e.target.value)}
+              value={sortOrder}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
             </select>
           </div>
 
+          {/* Add Project */}
           <Link
             to="/addproject"
             className="bg-green-600 hover:bg-green-500 transition text-white font-semibold py-2 px-6 rounded shadow"
@@ -75,15 +115,19 @@ function Projects() {
           </Link>
         </div>
 
-        {/* Projects Grid */}
+        {/* Project Grid */}
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredProjects.map((project, idx) => (
-            <ProjectCard key={idx} project={project} />
-          ))}
+          {filteredProjects.length === 0 ? (
+            <p className="text-center text-gray-500 col-span-full">
+              No projects found.
+            </p>
+          ) : (
+            filteredProjects.map((project, index) => (
+              <ProjectCard key={index} project={project} />
+            ))
+          )}
         </div>
       </div>
-
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

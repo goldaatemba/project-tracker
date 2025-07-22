@@ -21,9 +21,11 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)  
 
     owned_projects = db.relationship('Project', backref='owner', lazy=True)
     memberships = db.relationship('Member', backref='user', lazy=True)
+    cohort = db.relationship('Cohort', back_populates='members')
 
     def __repr__(self):
         return f"<User {self.id} - {self.username}>"
@@ -41,7 +43,9 @@ class User(db.Model):
             "email": self.email,
             "is_admin": self.is_admin,
             "is_blocked": self.is_blocked,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
+            "cohort_id": self.cohort_id,
+            "cohort": self.cohort.to_dict() if self.cohort else None
         }
 
 class Cohort(db.Model):
@@ -51,23 +55,34 @@ class Cohort(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     projects = db.relationship('Project', backref='cohort', lazy=True)
+    members = db.relationship('User', back_populates='cohort', lazy='dynamic')
 
-class Tech(db.Model):
-    __tablename__ = 'techs'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    def __repr__(self):
+        return f"<Cohort {self.id} - {self.name}>"
 
-    projects = db.relationship('Project', backref='tech', lazy=True)
-
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_at": self.created_at.isoformat(),
+            "members": [
+            {
+                "id": member.id,
+                "username": member.username,
+                "email": member.email
+            } for member in self.members
+        ]
+        }
+    
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    tech = db.Column(db.Text, nullable=True)
     github_link = db.Column(db.Text, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)
-    tech_id = db.Column(db.Integer, db.ForeignKey('techs.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     members = db.relationship('Member', backref='project', lazy=True)
@@ -87,3 +102,15 @@ class Member(db.Model):
             "email": self.user.email,
             "project_name": self.project.name
         }
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+
+    user = db.relationship('User', backref='comments')
+    project = db.relationship('Project', backref='comments')
