@@ -102,3 +102,15 @@ class Member(db.Model):
             "email": self.user.email,
             "project_name": self.project.name
         }
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+
+    user = db.relationship('User', backref='comments')
+    project = db.relationship('Project', backref='comments')
