@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 
 const CohortContext = createContext();
+
 const api_url = import.meta.env.VITE_API_URL;
 
 export const CohortProvider = ({ children }) => {
@@ -27,6 +28,7 @@ export const CohortProvider = ({ children }) => {
   };
 
   const create_cohort = (name, token) => {
+
     toast.loading("Creating cohort...");
     fetch(`${api_url}/cohorts`, {
       method: "POST",
@@ -36,6 +38,7 @@ export const CohortProvider = ({ children }) => {
       },
       body: JSON.stringify({ name }),
     })
+
       .then(async (res) => {
         toast.dismiss();
         if (!res.ok) {
@@ -54,6 +57,7 @@ export const CohortProvider = ({ children }) => {
   const update_cohort = (id, name, token) => {
     toast.loading("Updating cohort...");
     fetch(`${api_url}/cohorts/${id}`, {
+
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -70,9 +74,11 @@ export const CohortProvider = ({ children }) => {
         toast.dismiss();
         toast.error("Failed to update cohort");
       });
+
   };
 
   const delete_cohort = (id, token) => {
+
     toast.loading("Deleting cohort...");
     fetch(`${api_url}/cohorts/${id}`, {
       method: "DELETE",
@@ -89,6 +95,7 @@ export const CohortProvider = ({ children }) => {
         toast.dismiss();
         toast.error("Failed to delete cohort");
       });
+
   };
 
   const add_user_to_cohort = (cohort_id, user_id, token) => {
@@ -143,11 +150,13 @@ export const CohortProvider = ({ children }) => {
       });
   };
 
+
   useEffect(() => {
     fetch_cohorts();
   }, []);
 
   return (
+
     <CohortContext.Provider
       value={{
         cohorts,
@@ -161,6 +170,7 @@ export const CohortProvider = ({ children }) => {
         remove_user_from_cohort,
       }}
     >
+
       {children}
     </CohortContext.Provider>
   );
