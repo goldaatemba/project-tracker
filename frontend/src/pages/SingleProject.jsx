@@ -38,7 +38,7 @@ function SingleProject() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/projects/${id}`, {
+    fetch(`${api_url}/projects/${id}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then((res) => {
@@ -52,7 +52,7 @@ function SingleProject() {
 
   useEffect(() => {
     if (!token) return;
-    fetch("http://localhost:5000/users", {
+    fetch(`${api_url}/users`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -74,7 +74,7 @@ function SingleProject() {
       return;
     }
 
-    fetch(`http://localhost:5000/projects/${project.id}/members`, {
+    fetch(`${api_url}/projects/${project.id}/members`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ function SingleProject() {
       .then(() => {
         toast.success("Member added");
         setNewMemberUsername("");
-        return fetch(`http://localhost:5000/projects/${project.id}`, {
+        return fetch(`${api_url}/projects/${project.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
       })
@@ -101,13 +101,13 @@ function SingleProject() {
   const handleDeleteMember = (memberId) => {
     if (!window.confirm("Remove this member?")) return;
 
-    fetch(`http://localhost:5000/projects/${project.id}/members/${memberId}`, {
+    fetch(`${api_url}/projects/${project.id}/members/${memberId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : Promise.reject())
       .then(() =>
-        fetch(`http://localhost:5000/projects/${project.id}`, {
+        fetch(`${api_url}/projects/${project.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
       )
@@ -119,7 +119,7 @@ function SingleProject() {
   const handleDeleteProject = () => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
 
-    fetch(`http://localhost:5000/projects/${project.id}`, {
+    fetch(`${api_url}/projects/${project.id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
