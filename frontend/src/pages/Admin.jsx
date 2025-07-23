@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { api_url } from "../config.json";
 import { UserContext } from "../context/UserContext";
 import { toast } from "react-toastify";
 

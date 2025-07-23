@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { api_url } from "../config.json";
 
 
 const api_url = "https://project-bank-db99.onrender.com";
