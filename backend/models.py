@@ -23,8 +23,8 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)  
 
-    owned_projects = db.relationship('Project', backref='owner', lazy=True)
-    memberships = db.relationship('Member', backref='user', lazy=True)
+    owned_projects = db.relationship('Project', backref='owner', lazy=True, cascade="all, delete-orphan")
+    memberships = db.relationship('Member', backref='user', lazy=True, cascade="all, delete-orphan")
     cohort = db.relationship('Cohort', back_populates='members')
 
     def __repr__(self):
@@ -54,8 +54,8 @@ class Cohort(db.Model):
     name = db.Column(db.String(50), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    projects = db.relationship('Project', backref='cohort', lazy=True)
-    members = db.relationship('User', back_populates='cohort', lazy='dynamic')
+    projects = db.relationship('Project', backref='cohort', lazy=True, cascade="all, delete-orphan")
+    members = db.relationship('User', back_populates='cohort', lazy=True)
 
     def __repr__(self):
         return f"<Cohort {self.id} - {self.name}>"
@@ -85,7 +85,8 @@ class Project(db.Model):
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    members = db.relationship('Member', backref='project', lazy=True)
+    comments = db.relationship('Comment', back_populates='project', cascade="all, delete-orphan")
+    members = db.relationship('Member', backref='project', lazy=True, cascade="all, delete-orphan")
 
 class Member(db.Model):
     __tablename__ = 'members'
@@ -113,4 +114,13 @@ class Comment(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
 
     user = db.relationship('User', backref='comments')
-    project = db.relationship('Project', backref='comments')
+    project = db.relationship('Project', back_populates='comments')  # changed here
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "created_at": self.created_at.isoformat(),
+            "user": self.user.to_dict() if self.user else None,
+            "user_id": self.user_id,
+        }

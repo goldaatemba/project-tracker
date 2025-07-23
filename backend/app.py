@@ -54,6 +54,7 @@ from views.user import user_bp
 from views.cohort import cohort_bp
 from views.project import project_bp
 from views.member import member_bp
+from views.comments import comments_bp
 
 
 app.register_blueprint(auth_bp)
@@ -61,6 +62,7 @@ app.register_blueprint(user_bp)
 app.register_blueprint(cohort_bp)
 app.register_blueprint(project_bp)
 app.register_blueprint(member_bp)
+app.register_blueprint(comments_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)

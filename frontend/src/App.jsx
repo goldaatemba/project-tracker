@@ -9,16 +9,20 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { AdminDashboard , ManageProjects } from './pages/Admin';
+import { AdminDashboard  } from './pages/Admin';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import CohortProjects from './pages/Cohorts';
 import ProjectForm from './pages/AddProjects';
 import SingleProject from './pages/SingleProject';
 import ManageCohorts from './components/ManageCohorts';
+import ManageProjects from './components/ManageProjects';
+import  ManageUsers  from './components/ManageUsers';
+import EditProject from './components/EditProject';
 import Contact from './pages/Contact';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import EditProfile from './pages/EditProfile';
+import Blocked from './pages/Blocked';
 
 
 function App() {
@@ -34,6 +38,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/edit-project/:id" element={<EditProject />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/cohorts" element={<CohortProjects />} />
       <Route path="/profile" element={<Profile />} />
@@ -43,8 +48,10 @@ function App() {
       <Route path="/edit-profile" element={<EditProfile />} />
       <Route path="/admin/manage-cohorts" element={<ManageCohorts />} />
       <Route path="/admin/manage-projects" element={<ManageProjects />} />
+      <Route path="/admin/manage-users" element={<ManageUsers />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/blocked" element={<Blocked />} />
       </Route>
     </Routes>
     <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />

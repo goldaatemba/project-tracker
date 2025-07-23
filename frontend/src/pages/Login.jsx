@@ -27,6 +27,7 @@ function Login() {
 
       const data = await response.json();
       localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem("token", data.access_token);
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: {
@@ -62,6 +63,7 @@ function Login() {
 
       const data = await res.json();
       localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem("token", data.access_token);
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: {

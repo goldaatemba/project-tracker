@@ -72,7 +72,7 @@ def get_all_projects():
                 "id": p.cohort.id,
                 "name": p.cohort.name
             } if p.cohort else None,
-            "stack": p.tech or "Unknown",  # alias 'tech' as 'stack'
+            "stack": p.tech or "Unknown", 
             "created_at": p.created_at.strftime('%Y-%m-%d') if p.created_at else None,
             "owner_id": p.owner_id,
             "owner": p.owner.username if p.owner else None,
@@ -81,41 +81,57 @@ def get_all_projects():
 
     return jsonify(result)
 
+
 @project_bp.route("/projects/<int:id>", methods=["PATCH"])
 @jwt_required()
 def update_project(id):
-    data = request.get_json()
-    current_user_id = get_jwt_identity()
-    project = Project.query.get_or_404(id)
+    user_id = get_jwt_identity()
+    project = Project.query.get(id)
 
-    if project.owner_id != current_user_id:
+    if not project:
+        return jsonify({"error": "Project not found"}), 404
+
+    user = User.query.get(user_id)
+    if not (project.owner_id == user_id or user.is_admin):
         return jsonify({"error": "Unauthorized"}), 403
 
-    cohort_id = data.get("cohort_id")
-    if cohort_id:
-        cohort = Cohort.query.get(cohort_id)
-        if not cohort:
-            return jsonify({"error": "Cohort does not exist"}), 400
+    data = request.get_json()
+    field_mapping = {
+        "title": "name",
+        "description": "description",
+        "link": "github_link",
+    }
 
-    project.name = data.get("name", project.name)
-    project.description = data.get("description", project.description)
-    project.github_link = data.get("github_link", project.github_link)
-    project.cohort_id = cohort_id or project.cohort_id
-    project.tech = data.get("tech", project.tech)
+    for field, model_field in field_mapping.items():
+        if field in data:
+            setattr(project, model_field, data[field])
 
     db.session.commit()
-    return jsonify({"success": "Project updated"}), 200
 
+    return jsonify({
+        "success": "Project updated successfully",
+        "project": {
+            "id": project.id,
+            "title": project.name,
+            "description": project.description,
+            "link": project.github_link,
+        }
+    }), 200
 
 @project_bp.route("/projects/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_project(id):
-    current_user_id = get_jwt_identity()
-    project = Project.query.get_or_404(id)
+    user_id = get_jwt_identity()
+    project = Project.query.get(id)
 
-    if project.owner_id != current_user_id:
+    if not project:
+        return jsonify({"error": "Project not found"}), 404
+
+    user = User.query.get(user_id)
+    if not (project.owner_id == user_id or user.is_admin):
         return jsonify({"error": "Unauthorized"}), 403
 
     db.session.delete(project)
     db.session.commit()
-    return jsonify({"success": "Project deleted"}), 200
+
+    return jsonify({"message": "Project deleted successfully"}), 200

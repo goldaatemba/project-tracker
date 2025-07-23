@@ -17,13 +17,52 @@ function AddProjects() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetch('http://localhost:5000/me', {
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            navigate('/login');
+          }
+          throw new Error('Failed to fetch user');
+        }
+        return res.json();
+      })
+      .then((userData) => {
+        if (userData.is_blocked) {
+          navigate('/blocked');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error('Failed to verify user.');
+      });
+
     fetch('http://localhost:5000/cohorts', {
       credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            navigate('/login');
+          }
+          throw new Error('Unauthorized or failed to fetch');
+        }
+        return res.json();
+      })
       .then((data) => setCohorts(data))
-      .catch(() => toast.error('Failed to load cohorts.'));
-  }, []);
+      .catch((err) => {
+        console.error(err);
+        toast.error('Failed to load cohorts.');
+      });
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -97,7 +136,6 @@ function AddProjects() {
             required
           />
         </div>
-
         <div>
           <label className="block mb-1 font-medium">Description *</label>
           <textarea
@@ -109,7 +147,6 @@ function AddProjects() {
             required
           />
         </div>
-
         <div>
           <label className="block mb-1 font-medium">GitHub Link</label>
           <input
@@ -121,7 +158,6 @@ function AddProjects() {
             placeholder="https://github.com/your-project"
           />
         </div>
-
         <div>
           <label className="block mb-1 font-medium">Cohort *</label>
           <select
@@ -139,7 +175,6 @@ function AddProjects() {
             ))}
           </select>
         </div>
-
         <div>
           <label className="block mb-1 font-medium">Tech Stack *</label>
           <select
@@ -159,7 +194,6 @@ function AddProjects() {
             <option value="IoT">IoT</option>
           </select>
         </div>
-
         <div>
           <label className="block mb-1 font-medium">Group Members</label>
           <input
@@ -171,7 +205,6 @@ function AddProjects() {
             placeholder="e.g., Alice, Bob, Carlos"
           />
         </div>
-
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700"
