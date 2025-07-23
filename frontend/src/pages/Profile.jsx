@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Pencil } from 'lucide-react';
+import { api_url } from "../config.json";
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
