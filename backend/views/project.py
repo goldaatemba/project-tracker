@@ -96,9 +96,15 @@ def update_project(id):
         return jsonify({"error": "Unauthorized"}), 403
 
     data = request.get_json()
-    for field in ['title', 'description', 'link']:  
+    field_mapping = {
+        "title": "name",
+        "description": "description",
+        "link": "github_link",
+    }
+
+    for field, model_field in field_mapping.items():
         if field in data:
-            setattr(project, field, data[field])
+            setattr(project, model_field, data[field])
 
     db.session.commit()
 
@@ -112,7 +118,6 @@ def update_project(id):
         }
     }), 200
 
-
 @project_bp.route("/projects/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_project(id):
@@ -123,7 +128,7 @@ def delete_project(id):
         return jsonify({"error": "Project not found"}), 404
 
     user = User.query.get(user_id)
-    if not (project.user_id == user_id or user.is_admin):
+    if not (project.owner_id == user_id or user.is_admin):
         return jsonify({"error": "Unauthorized"}), 403
 
     db.session.delete(project)
