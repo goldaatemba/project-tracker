@@ -1,46 +1,61 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-// import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
-const api_url = "http://127.0.0.1:5000";
+const api_url = "http://localhost:5000";
+const auth_token = localStorage.getItem("token");
 
-export default function ManageProjects() {
-  const { auth_token } = localStorage.getItem("access_token");
-  const token = localStorage.getItem("access_token");
+function ManageProjects() {
   const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [cohorts, setCohorts] = useState([]);
+  const [stacks, setStacks] = useState([]);
+  const [filters, setFilters] = useState({ user: "", cohort: "", stack: "" });
   const [editingProject, setEditingProject] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    link: "",
-  });
+  const [formData, setFormData] = useState({ title: "", description: "", link: "" });
 
-  const fetchProjects = () => {
-    fetch(`${api_url}/projects`, {
-      headers: { Authorization: `Bearer ${auth_token}` },
-    })
-      .then(res => res.ok ? res.json() : Promise.reject("Failed to load projects"))
-      .then(setProjects)
-      .catch(() => toast.error("Could not fetch projects"));
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProjects();
-  }, [auth_token]);
+    fetch(`${api_url}/users`).then(res => res.json()).then(setUsers);
+    fetch(`${api_url}/cohorts`).then(res => res.json()).then(setCohorts);
+  }, []);
+
+  const fetchProjects = () => {
+    fetch(`${api_url}/projects`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProjects(data);
+        const uniqueStacks = [...new Set(data.map(p => p.stack).filter(Boolean))];
+        setStacks(uniqueStacks);
+      })
+      .catch(() => toast.error("Failed to load projects"));
+  };
+
+  useEffect(() => {
+    const filtered = projects.filter(p =>
+      (!filters.user || p.owner === filters.user) &&
+      (!filters.cohort || p.cohort?.name === filters.cohort) &&
+      (!filters.stack || p.stack === filters.stack)
+    );
+    setFilteredProjects(filtered);
+  }, [projects, filters]);
 
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
-  
+
     fetch(`${api_url}/projects/${id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${auth_token}` },
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to delete project");
-        toast.success("Project deleted successfully");
-        fetchProjects(); 
+        if (!res.ok) throw new Error();
+        toast.success("Project deleted!");
+        fetchProjects();
       })
-      .catch(() => toast.error("Error deleting project"));
+      .catch(() => toast.error("Delete failed"));
   };
 
   const handleEdit = (project) => {
@@ -54,16 +69,17 @@ export default function ManageProjects() {
 
   const handleUpdate = (e) => {
     e.preventDefault();
+
     fetch(`${api_url}/projects/${editingProject.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${auth_token}`,
       },
       body: JSON.stringify({
-        name: formData.title,
+        title: formData.title,
         description: formData.description,
-        github_link: formData.link,
+        link: formData.link,
       }),
     })
       .then((res) => {
@@ -75,65 +91,114 @@ export default function ManageProjects() {
       })
       .catch(() => toast.error("Failed to update project"));
   };
-  
-  
 
   return (
-    <div className="bg-blue-100 min-h-screen p-8">
-      <h1 className="text-2xl font-bold text-blue-900 mb-6">Manage Projects</h1>
+    <div className="p-6 bg-blue-50 min-h-screen">
+      <h2 className="text-3xl font-bold mb-6 text-blue-800">Manage Projects</h2>
+
+      <div className="flex flex-wrap gap-4 mb-8">
+        <select
+          onChange={(e) => setFilters({ ...filters, user: e.target.value })}
+          className="p-2 rounded-md border border-gray-300 bg-white shadow-sm"
+        >
+          <option value="">All Users</option>
+          {users.map((u) => (
+            <option key={u.id} value={u.username}>
+              {u.username}
+            </option>
+          ))}
+        </select>
+
+        <select
+          onChange={(e) => setFilters({ ...filters, cohort: e.target.value })}
+          className="p-2 rounded-md border border-gray-300 bg-white shadow-sm"
+        >
+          <option value="">All Cohorts</option>
+          {cohorts.map((c) => (
+            <option key={c.id} value={c.name}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          onChange={(e) => setFilters({ ...filters, stack: e.target.value })}
+          className="p-2 rounded-md border border-gray-300 bg-white shadow-sm"
+        >
+          <option value="">All Stacks</option>
+          {stacks.map((s, idx) => (
+            <option key={idx} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="grid gap-6">
+        {filteredProjects.map((project) => (
+          <div
+            key={project.id}
+            className="bg-white p-6 rounded-xl shadow hover:shadow-md transition-shadow border border-gray-200"
+          >
+            <h3 className="text-xl font-semibold text-blue-700">{project.name}</h3>
+            <p className="text-gray-700 mt-2">{project.description}</p>
+            <div className="text-sm text-gray-600 mt-3">
+              <p><strong>Owner:</strong> {project.owner}</p>
+              <p><strong>Cohort:</strong> {project.cohort?.name}</p>
+              <p><strong>Stack:</strong> {project.stack}</p>
+              <p><strong>Created:</strong> {new Date(project.created_at).toLocaleDateString()}</p>
+            </div>
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => handleEdit(project)}
+                className="px-4 py-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(project.id)}
+                className="px-4 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {editingProject && (
-        <form onSubmit={handleUpdate} className="space-y-4 mb-6 bg-white p-4 rounded-lg shadow">
-          <h2 className="text-xl font-semibold text-blue-800">Edit Project</h2>
+        <form onSubmit={handleUpdate} className="mt-12 space-y-4 border-t pt-6 max-w-xl">
+          <h3 className="text-xl font-semibold text-blue-800">Edit Project</h3>
           <input
             type="text"
             placeholder="Title"
-            className="w-full p-2 border rounded"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="block w-full p-2 border rounded-md"
             required
           />
-          <input
-            type="text"
+          <textarea
             placeholder="Description"
-            className="w-full p-2 border rounded"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            className="block w-full p-2 border rounded-md"
             required
           />
           <input
-            type="text"
+            type="url"
             placeholder="GitHub Link"
-            className="w-full p-2 border rounded"
             value={formData.link}
             onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+            className="block w-full p-2 border rounded-md"
             required
           />
-          <div className="flex gap-2">
-            <button type="submit" className="bg-blue-800 text-white px-4 py-2 rounded">Update</button>
-            <button type="button" onClick={() => setEditingProject(null)} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-          </div>
+          <button type="submit" className="px-5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+            Save Changes
+          </button>
         </form>
       )}
-
-      <ul className="space-y-4">
-        {projects.map((project) => (
-          <li key={project.id} className="bg-white p-4 rounded-lg shadow">
-            <p className="text-blue-800"><strong>Title:</strong> {project.name}</p>
-            <p className="text-blue-600"><strong>Description:</strong> {project.description}</p>
-            <p className="text-blue-600">
-              <strong>GitHub:</strong>{" "}
-              <a href={project.github_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
-                {project.github_link}
-              </a>
-            </p>
-            <div className="flex gap-2 mt-2">
-              <button onClick={() => handleEdit(project)} className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-              <button onClick={() => handleDelete(project.id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
+
+export default ManageProjects;
