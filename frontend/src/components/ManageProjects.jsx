@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { api_url } from "../config.json";
 
 
+const api_url = "https://project-bank-db99.onrender.com";
 const auth_token = localStorage.getItem("token");
 
 function ManageProjects() {

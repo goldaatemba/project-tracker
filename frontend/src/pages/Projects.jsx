@@ -14,7 +14,7 @@ function Projects() {
   const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
-    fetch(`${api_url}/projects`)
+    fetch("https://project-bank-db99.onrender.com/projects")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch projects");
         return res.json();

@@ -12,12 +12,12 @@ function ProjectComments({ projectId }) {
 
 
   useEffect(() => {
-    fetch(`${api_url}/projects/${projectId}/comments`)
+    fetch(`https://project-bank-db99.onrender.com/projects/${projectId}/comments`)
       .then((res) => res.json())
       .then(setComments)
       .catch(() => toast.error("Failed to load comments"));
 
-    fetch(`${api_url}/me`, {
+    fetch("https://project-bank-db99.onrender.com/me", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -29,7 +29,7 @@ function ProjectComments({ projectId }) {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    fetch(`${api_url}/projects/${projectId}/comments`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${projectId}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ function ProjectComments({ projectId }) {
   };
 
   const handleSaveEdit = (id) => {
-    fetch(`${api_url}/comments/${id}`, {
+    fetch(`https://project-bank-db99.onrender.com/comments/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ function ProjectComments({ projectId }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`${api_url}/comments/${id}`, {
+    fetch(`https://project-bank-db99.onrender.com/comments/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

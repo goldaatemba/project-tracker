@@ -14,7 +14,7 @@ function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const res = await fetch(
-        `${api_url}/users${showUnassigned ? "?unassigned=true" : ""}`,
+        `https://project-bank-db99.onrender.com/users${showUnassigned ? "?unassigned=true" : ""}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -33,7 +33,7 @@ function ManageUsers() {
 
   const toggleBlock = async (user) => {
     try {
-      const res = await fetch(`${api_url}/update_user`, {
+      const res = await fetch("https://project-bank-db99.onrender.com/update_user", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ function ManageUsers() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const res = await fetch(`${api_url}/delete_user_profile/${userId}`, {
+      const res = await fetch(`https://project-bank-db99.onrender.com/delete_user_profile/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

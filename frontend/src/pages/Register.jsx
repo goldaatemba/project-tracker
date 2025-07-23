@@ -20,7 +20,7 @@ function Register() {
     }
 
     try {
-      const res = await fetch(`${api_url}/register`, {
+      const res = await fetch('https://project-bank-db99.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
@@ -31,7 +31,7 @@ function Register() {
       if (res.ok) {
         localStorage.setItem('access_token', data.access_token);
 
-        const userRes = await fetch(`${api_url}/me`, {
+        const userRes = await fetch('https://project-bank-db99.onrender.com/me', {
           headers: {
             Authorization: `Bearer ${data.access_token}`,
           },

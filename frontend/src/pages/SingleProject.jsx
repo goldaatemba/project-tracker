@@ -25,7 +25,7 @@ function SingleProject() {
       return;
     }
 
-    fetch(`${api_url}/me`, {
+    fetch("https://project-bank-db99.onrender.com/me", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ function SingleProject() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${api_url}/projects/${id}`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${id}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then((res) => {
@@ -55,7 +55,7 @@ function SingleProject() {
 
   useEffect(() => {
     if (!token) return;
-    fetch(`${api_url}/users`, {
+    fetch("https://project-bank-db99.onrender.com/users", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -77,7 +77,7 @@ function SingleProject() {
       return;
     }
 
-    fetch(`${api_url}/projects/${project.id}/members`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${project.id}/members`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -92,7 +92,7 @@ function SingleProject() {
       .then(() => {
         toast.success("Member added");
         setNewMemberUsername("");
-        return fetch(`${api_url}/projects/${project.id}`, {
+        return fetch(`https://project-bank-db99.onrender.com/projects/${project.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
       })
@@ -104,13 +104,13 @@ function SingleProject() {
   const handleDeleteMember = (memberId) => {
     if (!window.confirm("Remove this member?")) return;
 
-    fetch(`${api_url}/projects/${project.id}/members/${memberId}`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${project.id}/members/${memberId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : Promise.reject())
       .then(() =>
-        fetch(`${api_url}/projects/${project.id}`, {
+        fetch(`https://project-bank-db99.onrender.com/projects/${project.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
       )
@@ -122,7 +122,7 @@ function SingleProject() {
   const handleDeleteProject = () => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
 
-    fetch(`${api_url}/projects/${project.id}`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${project.id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

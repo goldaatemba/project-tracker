@@ -4,7 +4,7 @@ import { api_url } from "../config.json";
 import { UserContext } from "../context/UserContext";
 import { toast } from "react-toastify";
 
-// const api_url = "http://127.0.0.1:5000";
+const api_url = "https://project-bank-db99.onrender.com";
 
 export function AdminDashboard() {
   const dashboardItems = [

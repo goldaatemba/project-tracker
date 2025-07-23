@@ -15,7 +15,7 @@ export default function Layout() {
       if (!token) return;
 
       try {
-        const res = await fetch(`${api_url}/me`, {
+        const res = await fetch("https://project-bank-db99.onrender.com/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
