@@ -24,7 +24,7 @@ const EditProfile = () => {
       return;
     }
 
-    fetch(`${api_url}/me`, {
+    fetch('https://project-bank-db99.onrender.com/me', {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
@@ -69,7 +69,7 @@ const EditProfile = () => {
         ...(formData.newPassword && { newPassword: formData.newPassword }),
       };
 
-      const res = await fetch(`${api_url}/update_user`, {
+      const res = await fetch('https://project-bank-db99.onrender.com/update_user', {
         method: 'PATCH', 
         headers: { 
           'Authorization': `Bearer ${token}`,

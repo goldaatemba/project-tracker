@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { api_url } from "../config.json";
 
 
+const api_url = "https://project-bank-db99.onrender.com";
 
 export default function CohortProjects() {
   const [cohorts, setCohorts] = useState([]);

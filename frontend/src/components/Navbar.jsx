@@ -26,7 +26,7 @@ function Navbar() {
     }
 
     try {
-      const res = await fetch(`${api_url}/logout`, {
+      const res = await fetch("https://project-bank-db99.onrender.com/logout", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

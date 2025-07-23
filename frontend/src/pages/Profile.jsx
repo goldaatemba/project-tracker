@@ -17,7 +17,7 @@ const Profile = () => {
       return;
     }
 
-    fetch(`${api_url}/me`, {
+    fetch('https://project-bank-db99.onrender.com/me', {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const Profile = () => {
     const token = localStorage.getItem('access_token');
     if (!token || !user) return;
 
-    fetch(`${api_url}/projects`, {
+    fetch('https://project-bank-db99.onrender.com/projects', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -60,7 +60,7 @@ const Profile = () => {
     if (!token) return;
 
     try {
-      await fetch(`${api_url}/logout`, {
+      await fetch('https://project-bank-db99.onrender.com/logout', {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

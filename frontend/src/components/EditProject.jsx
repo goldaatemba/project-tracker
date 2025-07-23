@@ -17,7 +17,7 @@ const EditProject = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch(`${api_url}/projects/${id}`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : Promise.reject("Failed to fetch project"))
@@ -50,7 +50,7 @@ const EditProject = () => {
       github_link: project.link,
     };
 
-    fetch(`${api_url}/projects/${id}`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const EditProject = () => {
   };
 
   const handleRemoveMember = (userId) => {
-    fetch(`${api_url}/projects/${id}/remove_member`, {
+    fetch(`https://project-bank-db99.onrender.com/projects/${id}/remove_member`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

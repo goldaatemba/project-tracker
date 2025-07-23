@@ -19,7 +19,7 @@ function AddProjects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${api_url}/me`, {
+    fetch('https://project-bank-db99.onrender.com/me', {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -44,7 +44,7 @@ function AddProjects() {
         toast.error('Failed to verify user.');
       });
 
-    fetch(`${api_url}/cohorts`, {
+    fetch('https://project-bank-db99.onrender.com/cohorts', {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -94,7 +94,7 @@ function AddProjects() {
     };
 
     try {
-      const res = await fetch(`${api_url}/projects`, {
+      const res = await fetch('https://project-bank-db99.onrender.com/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
