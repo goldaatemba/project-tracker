@@ -2,6 +2,7 @@ import datetime
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Project, Member, User, Cohort
+from flask_cors import cross_origin
 
 project_bp = Blueprint("project_bp", __name__)
 
@@ -26,7 +27,7 @@ def create_project():
         github_link=data["github_link"],
         owner_id=current_user_id,
         cohort_id=cohort_id,
-        tech=data.get("tech"),  # text field
+        tech=data.get("tech"),  
         created_at=datetime.datetime.utcnow()
     )
 
@@ -34,8 +35,8 @@ def create_project():
     db.session.commit()
     return jsonify({"success": "Project created", "id": new_project.id}), 201
 
-
 @project_bp.route("/projects/<int:id>", methods=["GET"])
+@cross_origin() 
 def get_project(id):
     project = Project.query.get_or_404(id)
 
@@ -45,16 +46,25 @@ def get_project(id):
         "description": project.description,
         "github_link": project.github_link,
         "cohort": {
-                "id": project.cohort.id,
-                "name": project.cohort.name
-            } if project.cohort else None,
+            "id": project.cohort.id,
+            "name": project.cohort.name
+        } if project.cohort else None,
         "stack": project.tech if project.tech else "Unknown",
-        "created_at": project.created_at,
+        "created_at": project.created_at.isoformat() if project.created_at else None,  # <- FIXED THIS
         "owner_id": project.owner_id,
-        "owner": project.owner.username if project.owner else None,
-        "members": [member.user.username for member in project.members if member.user]
-    })
-
+        "owner": {
+            "id": project.owner.id,
+            "username": project.owner.username
+        } if project.owner else None,
+        "members": [
+            {
+                "id": member.user.id,
+                "username": member.user.username,
+                "email": member.user.email
+            }
+            for member in project.members if member.user
+        ]
+    }), 200
 
 @project_bp.route("/projects", methods=["GET"])
 def get_all_projects():
@@ -122,16 +132,36 @@ def update_project(id):
 @jwt_required()
 def delete_project(id):
     user_id = get_jwt_identity()
-    project = Project.query.get(id)
+    print("Received DELETE for project ID:", id)
+    print("Current user ID from token:", user_id)
 
+    project = Project.query.get(id)
     if not project:
+        print("Project not found.")
         return jsonify({"error": "Project not found"}), 404
 
     user = User.query.get(user_id)
+    print("Requesting user is admin?", user.is_admin)
+
     if not (project.owner_id == user_id or user.is_admin):
+        print("Unauthorized attempt to delete project.")
         return jsonify({"error": "Unauthorized"}), 403
 
     db.session.delete(project)
     db.session.commit()
 
+    print("Project deleted.")
     return jsonify({"message": "Project deleted successfully"}), 200
+
+@project_bp.route("/projects/filters", methods=["GET"])
+@jwt_required(optional=True)
+def get_project_filters():
+    cohorts = [{"id": c.id, "name": c.name} for c in Cohort.query.order_by(Cohort.name).all()]
+    users = [{"id": u.id, "username": u.username} for u in User.query.order_by(User.username).all()]
+    stacks = db.session.query(Project.tech).distinct().filter(Project.tech.isnot(None)).all()
+
+    return jsonify({
+        "cohorts": cohorts,
+        "users": users,
+        "stacks": [s[0] for s in stacks if s[0]]
+    })

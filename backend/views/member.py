@@ -1,28 +1,33 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Member, User, Project
+from flask_cors import cross_origin
+
 
 member_bp = Blueprint("member_bp", __name__)
 
-@member_bp.route("/members", methods=["POST"])
+@member_bp.route("/projects/<int:project_id>/members", methods=["POST", "OPTIONS"])
+@cross_origin(origins=["http://localhost:5173"], supports_credentials=True)
 @jwt_required()
-def add_member():
+def add_member_to_project(project_id):
     data = request.get_json()
-    project_id = data.get("project_id")
-    user_id = data.get("user_id")
+    username = data.get("username")
 
-    if not project_id or not user_id:
-        return jsonify({"error": "project_id and user_id are required"}), 400
+    if not username:
+        return jsonify({"error": "username is required"}), 400
 
-    existing = Member.query.filter_by(project_id=project_id, user_id=user_id).first()
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    existing = Member.query.filter_by(project_id=project_id, user_id=user.id).first()
     if existing:
-        return jsonify({"message": "User is already a member of this project"}), 200
+        return jsonify({"message": "User already a member"}), 200
 
-    member = Member(project_id=project_id, user_id=user_id)
+    member = Member(project_id=project_id, user_id=user.id)
     db.session.add(member)
     db.session.commit()
     return jsonify(member.to_dict()), 201
-
 
 @member_bp.route("/members/<int:id>", methods=["GET"])
 def get_member(id):
@@ -87,3 +92,33 @@ def remove_user_from_project(project_id, user_id):
     db.session.delete(member)
     db.session.commit()
     return jsonify({"message": f"User {user_id} removed from project {project_id}"}), 200
+
+
+@member_bp.route("/members", methods=["POST", "OPTIONS"])
+@cross_origin(origins=["http://localhost:5173"], supports_credentials=True)
+@jwt_required()
+def add_member():
+    data = request.get_json()
+    project_id = data.get("project_id")
+    user_id = data.get("user_id")
+
+    if not project_id or not user_id:
+        return jsonify({"error": "project_id and user_id are required"}), 400
+
+    project = Project.query.get(project_id)
+    if not project:
+        return jsonify({"error": "Project not found"}), 404
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    existing = Member.query.filter_by(project_id=project_id, user_id=user_id).first()
+    if existing:
+        return jsonify({"message": "User already a member"}), 200
+
+    member = Member(project_id=project_id, user_id=user_id)
+    db.session.add(member)
+    db.session.commit()
+
+    return jsonify(member.to_dict()), 201

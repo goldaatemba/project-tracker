@@ -11,10 +11,10 @@ function SingleProject() {
   const [project, setProject] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [newMemberUsername, setNewMemberUsername] = useState("");
+  const [availableUsers, setAvailableUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const token = localStorage.getItem("access_token"); 
-
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     if (!token) {
@@ -50,6 +50,19 @@ function SingleProject() {
       .finally(() => setLoading(false));
   }, [id, token]);
 
+  useEffect(() => {
+    if (!token) return;
+    fetch("http://localhost:5000/users", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch users");
+        return res.json();
+      })
+      .then(setAvailableUsers)
+      .catch(() => toast.error("Could not load users"));
+  }, [token]);
+
   const canManageMembers =
     currentUser &&
     project &&
@@ -57,7 +70,7 @@ function SingleProject() {
 
   const handleAddMember = () => {
     if (!newMemberUsername.trim()) {
-      toast.error("Please enter a username");
+      toast.error("Please select a user");
       return;
     }
 
@@ -136,6 +149,10 @@ function SingleProject() {
     );
   }
 
+  const nonMemberUsers = availableUsers.filter(
+    (u) => !project.members.some((m) => m.id === u.id)
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10 md:px-10">
       <ToastContainer />
@@ -168,13 +185,13 @@ function SingleProject() {
                 onClick={() => navigate(`/edit-project/${project.id}`)}
                 className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
               >
-                 Edit
+                Edit
               </button>
               <button
                 onClick={handleDeleteProject}
                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
               >
-                 Delete
+                Delete
               </button>
             </div>
           )}
@@ -211,19 +228,21 @@ function SingleProject() {
         </div>
 
         {project.github_link ? (
-            <div className="pt-4">
-              <a
-                href={project.github_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-[#043873] hover:bg-[#022d5b] text-white font-semibold px-5 py-2 rounded-lg transition"
-              >
-                🔗 View on GitHub
-              </a>
-            </div>
-          ) : (
-            <p className="pt-4 text-sm text-gray-400 italic">No GitHub link provided</p>
-          )}
+          <div className="pt-4">
+            <a
+              href={project.github_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-[#043873] hover:bg-[#022d5b] text-white font-semibold px-5 py-2 rounded-lg transition"
+            >
+              🔗 View on GitHub
+            </a>
+          </div>
+        ) : (
+          <p className="pt-4 text-sm text-gray-400 italic">
+            No GitHub link provided
+          </p>
+        )}
 
         <div>
           <h2 className="text-lg font-semibold text-gray-700 mb-1">Members</h2>
@@ -250,13 +269,18 @@ function SingleProject() {
 
           {canManageMembers && (
             <div className="mt-4 flex items-center space-x-2">
-              <input
-                type="text"
-                placeholder="Username to add"
+              <select
                 value={newMemberUsername}
                 onChange={(e) => setNewMemberUsername(e.target.value)}
                 className="border border-gray-300 rounded px-3 py-2 flex-grow"
-              />
+              >
+                <option value="">Select user to add</option>
+                {nonMemberUsers.map((user) => (
+                  <option key={user.id} value={user.username}>
+                    {user.username}
+                  </option>
+                ))}
+              </select>
               <button
                 onClick={handleAddMember}
                 className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700"
