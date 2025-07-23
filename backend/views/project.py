@@ -26,7 +26,7 @@ def create_project():
         github_link=data["github_link"],
         owner_id=current_user_id,
         cohort_id=cohort_id,
-        tech=data.get("tech"),  # text field
+        tech=data.get("tech"),  
         created_at=datetime.datetime.utcnow()
     )
 
@@ -122,16 +122,23 @@ def update_project(id):
 @jwt_required()
 def delete_project(id):
     user_id = get_jwt_identity()
-    project = Project.query.get(id)
+    print("Received DELETE for project ID:", id)
+    print("Current user ID from token:", user_id)
 
+    project = Project.query.get(id)
     if not project:
+        print("Project not found.")
         return jsonify({"error": "Project not found"}), 404
 
     user = User.query.get(user_id)
+    print("Requesting user is admin?", user.is_admin)
+
     if not (project.owner_id == user_id or user.is_admin):
+        print("Unauthorized attempt to delete project.")
         return jsonify({"error": "Unauthorized"}), 403
 
     db.session.delete(project)
     db.session.commit()
 
+    print("Project deleted.")
     return jsonify({"message": "Project deleted successfully"}), 200

@@ -1,11 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/UserContext";
+// import { UserContext } from "../context/UserContext";
 
 const api_url = "http://127.0.0.1:5000";
 
 export default function ManageProjects() {
-  const { auth_token } = useContext(UserContext);
+  const { auth_token } = localStorage.getItem("access_token");
+  const token = localStorage.getItem("access_token");
   const [projects, setProjects] = useState([]);
   const [editingProject, setEditingProject] = useState(null);
   const [formData, setFormData] = useState({
@@ -28,16 +29,18 @@ export default function ManageProjects() {
   }, [auth_token]);
 
   const handleDelete = (id) => {
+    if (!window.confirm("Are you sure you want to delete this project?")) return;
+  
     fetch(`${api_url}/projects/${id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${auth_token}` },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        if (!res.ok) throw new Error();
-        toast.success("Project deleted");
-        fetchProjects();
+        if (!res.ok) throw new Error("Failed to delete project");
+        toast.success("Project deleted successfully");
+        fetchProjects(); 
       })
-      .catch(() => toast.error("Failed to delete project"));
+      .catch(() => toast.error("Error deleting project"));
   };
 
   const handleEdit = (project) => {
@@ -55,12 +58,12 @@ export default function ManageProjects() {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${auth_token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        title: formData.title,
+        name: formData.title,
         description: formData.description,
-        link: formData.link,
+        github_link: formData.link,
       }),
     })
       .then((res) => {
