@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { api_url } from "../config.json";
+
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -12,7 +14,7 @@ function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/users${showUnassigned ? "?unassigned=true" : ""}`,
+        `${api_url}/users${showUnassigned ? "?unassigned=true" : ""}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -31,7 +33,7 @@ function ManageUsers() {
 
   const toggleBlock = async (user) => {
     try {
-      const res = await fetch("http://localhost:5000/update_user", {
+      const res = await fetch(`${api_url}/update_user`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +60,7 @@ function ManageUsers() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/delete_user_profile/${userId}`, {
+      const res = await fetch(`${api_url}/delete_user_profile/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

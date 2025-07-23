@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { api_url } from "../config.json";
 
-const api_url = "http://localhost:5000";
+
 const auth_token = localStorage.getItem("access_token");
 
 export default function ManageCohorts() {

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { api_url } from "../config.json";
+
 
 function ProjectComments({ projectId }) {
   const [comments, setComments] = useState([]);
@@ -8,13 +10,14 @@ function ProjectComments({ projectId }) {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
+
   useEffect(() => {
-    fetch(`http://localhost:5000/projects/${projectId}/comments`)
+    fetch(`${api_url}/projects/${projectId}/comments`)
       .then((res) => res.json())
       .then(setComments)
       .catch(() => toast.error("Failed to load comments"));
 
-    fetch("http://localhost:5000/me", {
+    fetch(`${api_url}/me`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -26,7 +29,7 @@ function ProjectComments({ projectId }) {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:5000/projects/${projectId}/comments`, {
+    fetch(`${api_url}/projects/${projectId}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +52,7 @@ function ProjectComments({ projectId }) {
   };
 
   const handleSaveEdit = (id) => {
-    fetch(`http://localhost:5000/comments/${id}`, {
+    fetch(`${api_url}/comments/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +73,7 @@ function ProjectComments({ projectId }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/comments/${id}`, {
+    fetch(`${api_url}/comments/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

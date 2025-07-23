@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+import { api_url } from "../config.json";
+
 
 const TechContext = createContext();
 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImg from "/projecthero.png";
 import colabImg from "/colab.png"; 
-import config from "../config";
+import api_url from "../config";
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);

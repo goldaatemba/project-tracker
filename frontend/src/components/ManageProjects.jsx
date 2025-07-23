@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { api_url } from "../config.json";
 
-const api_url = "http://localhost:5000";
+
 const auth_token = localStorage.getItem("token");
 
 function ManageProjects() {

@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ToastContainer } from 'react-toastify';
+import { api_url } from "../config.json";
+
 
 export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,7 +15,7 @@ export default function Layout() {
       if (!token) return;
 
       try {
-        const res = await fetch("http://localhost:5000/me", {
+        const res = await fetch(`${api_url}/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
