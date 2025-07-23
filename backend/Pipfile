@@ -20,6 +20,8 @@ python-dotenv = "*"
 google-auth = "*"
 flask = "*"
 flask-cors = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
 
 [dev-packages]
 

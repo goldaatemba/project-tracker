@@ -11,7 +11,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project_tracking.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pb_db_uxkt_user:Ui8z1zdKK9UZz5GlK5kDCMVo2V2i9QBN@dpg-d20k3cre5dus73dgmi4g-a.oregon-postgres.render.com/pb_db_uxkt'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
