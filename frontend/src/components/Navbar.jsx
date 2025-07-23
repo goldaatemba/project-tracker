@@ -69,7 +69,7 @@ function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+        <img src="/logo.png" alt="Logo" className="h-10 w-auto filter invert" />
         <Link to="/" className="text-2xl font-bold text-white tracking-tight">
           ProjectBank
         </Link>
