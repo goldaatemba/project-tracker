@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-from flask import Flask
-from flask_migrate import Migrate
-from models import db
-
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project.db'
-app.config['sqlalCHEMY_TRACK_MODIFICATIONS'] = False
-
-db.init_app(app)
-migrate = Migrate(app,db)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
-=======
 from flask import Flask, request, jsonify
 from flask_migrate import Migrate
 from flask_mail import Mail
@@ -91,4 +74,3 @@ app.register_blueprint(tech_bp)
 # Run App
 if __name__ == "__main__":
     app.run(debug=True)
->>>>>>> d0383da1e1949c2e9dd07bad69ef9006ff32aac9
