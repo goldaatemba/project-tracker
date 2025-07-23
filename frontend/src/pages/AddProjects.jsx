@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import { api_url } from "../config.json";
+
 
 function AddProjects() {
   const [formData, setFormData] = useState({
@@ -17,7 +19,7 @@ function AddProjects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/me', {
+    fetch(`${api_url}/me`, {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -42,7 +44,7 @@ function AddProjects() {
         toast.error('Failed to verify user.');
       });
 
-    fetch('http://localhost:5000/cohorts', {
+    fetch(`${api_url}/cohorts`, {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -92,7 +94,7 @@ function AddProjects() {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/projects', {
+      const res = await fetch(`${api_url}/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

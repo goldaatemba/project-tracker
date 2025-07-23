@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImg from "/projecthero.png";
 import colabImg from "/colab.png"; 
-import config from "../config";
+import api_url from "../config";
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:5000/projects?featured=true&_limit=3`)
+    fetch(`${api_url}/me/projects?featured=true&_limit=3`)
       .then((res) => res.json())
       .then((data) => setFeaturedProjects(data))
       .catch((err) => console.error("Error fetching projects:", err));

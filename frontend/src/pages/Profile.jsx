@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Pencil } from 'lucide-react';
+import { api_url } from "../config.json";
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -15,7 +17,7 @@ const Profile = () => {
       return;
     }
 
-    fetch('http://localhost:5000/me', {
+    fetch(`${api_url}/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -39,7 +41,7 @@ const Profile = () => {
     const token = localStorage.getItem('access_token');
     if (!token || !user) return;
 
-    fetch('http://localhost:5000/projects', {
+    fetch(`${api_url}/projects`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -58,7 +60,7 @@ const Profile = () => {
     if (!token) return;
 
     try {
-      await fetch('http://localhost:5000/logout', {
+      await fetch(`${api_url}/logout`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

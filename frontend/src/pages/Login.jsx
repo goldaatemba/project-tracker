@@ -4,6 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import 'react-toastify/dist/ReactToastify.css';
+import { api_url } from "../config.json";
+
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${api_url}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -29,7 +31,7 @@ function Login() {
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem("token", data.access_token);
 
-      const userRes = await fetch('http://localhost:5000/me', {
+      const userRes = await fetch(`${api_url}/me`, {
         headers: {
           Authorization: `Bearer ${data.access_token}`,
         },
@@ -53,7 +55,7 @@ function Login() {
       const decoded = jwtDecode(credential);
       console.log("Decoded Google credential:", decoded);
 
-      const res = await fetch('http://localhost:5000/login/google', {
+      const res = await fetch(`${api_url}/login/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ credential }),
@@ -65,7 +67,7 @@ function Login() {
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem("token", data.access_token);
 
-      const userRes = await fetch('http://localhost:5000/me', {
+      const userRes = await fetch(`${api_url}/me`, {
         headers: {
           Authorization: `Bearer ${data.access_token}`,
         },

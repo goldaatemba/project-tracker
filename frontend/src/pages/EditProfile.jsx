@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { api_url } from "../config.json";
+
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +24,7 @@ const EditProfile = () => {
       return;
     }
 
-    fetch('http://localhost:5000/me', {
+    fetch(`${api_url}/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
@@ -67,7 +69,7 @@ const EditProfile = () => {
         ...(formData.newPassword && { newPassword: formData.newPassword }),
       };
 
-      const res = await fetch('http://localhost:5000/update_user', {
+      const res = await fetch(`${api_url}/update_user`, {
         method: 'PATCH', 
         headers: { 
           'Authorization': `Bearer ${token}`,

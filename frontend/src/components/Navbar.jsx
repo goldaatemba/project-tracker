@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
+import { api_url } from "../config.json";
+
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +26,7 @@ function Navbar() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/logout", {
+      const res = await fetch(`${api_url}/logout`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

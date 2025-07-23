@@ -11,13 +11,15 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pb_db_uxkt_user:Ui8z1zdKK9UZz5GlK5kDCMVo2V2i9QBN@dpg-d20k3cre5dus73dgmi4g-a.oregon-postgres.render.com/pb_db_uxkt'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
 CORS(app,
-     origins=["http://localhost:5173"],
+     origins=["http://localhost:5173/, https://projecttracker-neon.vercel.app/"],
      supports_credentials=True,
      methods=["GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"],
      allow_headers=["Content-Type", "Authorization"])
