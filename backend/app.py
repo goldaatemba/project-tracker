@@ -17,7 +17,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 CORS(app,
-     origins=["https://project-tracker-xi-gray.vercel.app/"],
+     origins=["https://projecttracker-neon.vercel.app/"],
      supports_credentials=True,
      methods=["GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"],
      allow_headers=["Content-Type", "Authorization"])
