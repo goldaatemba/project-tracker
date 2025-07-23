@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { api_url } from "../config.json";
 
 
-// const api_url = "http://localhost:5000";
 
 export default function CohortProjects() {
   const [cohorts, setCohorts] = useState([]);

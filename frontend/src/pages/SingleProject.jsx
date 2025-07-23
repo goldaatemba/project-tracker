@@ -3,6 +3,9 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import ProjectComments from "../components/ProjectComments";
 import "react-toastify/dist/ReactToastify.css";
+import { api_url } from "../config.json";
+
+
 
 function SingleProject() {
   const { id } = useParams();
@@ -22,7 +25,7 @@ function SingleProject() {
       return;
     }
 
-    fetch("http://localhost:5000/me", {
+    fetch(`${api_url}/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

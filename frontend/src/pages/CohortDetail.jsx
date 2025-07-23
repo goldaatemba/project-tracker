@@ -3,10 +3,9 @@ import { useParams } from "react-router-dom";
 import { api_url } from "../config.json";
 
 
-// const api_url = "http://localhost:5000";
 
 export default function CohortDetail() {
-  const { id } = useParams(); // from route /cohorts/:id
+  const { id } = useParams(); 
   const [cohort, setCohort] = useState(null);
   const [loading, setLoading] = useState(true);
 
