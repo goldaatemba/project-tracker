@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const api_url = "http://localhost:5000";
 const auth_token = localStorage.getItem("access_token");
@@ -9,6 +10,7 @@ export default function ManageCohorts() {
   const [cohorts, setCohorts] = useState([]);
   const [cohortName, setCohortName] = useState("");
   const [unassignedUsers, setUnassignedUsers] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${api_url}/cohorts`, {
@@ -160,7 +162,12 @@ export default function ManageCohorts() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      
+      <button
+      onClick={() => navigate("/admin")}
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition"
+    >
+       Return
+    </button>
       <h1 className="text-2xl font-bold mb-4">Manage Cohorts</h1>
 
       <div className="mb-6 flex gap-2">

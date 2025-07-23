@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
   const [showUnassigned, setShowUnassigned] = useState(false);
   const token = localStorage.getItem("access_token");
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     try {
@@ -80,8 +82,15 @@ function ManageUsers() {
   return (
     <div className="min-h-screen bg-blue-50 py-10 px-4">
       <ToastContainer position="top-right" autoClose={3000} />
+      
 
       <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+      <button
+      onClick={() => navigate("/admin")}
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition"
+    >
+      Return
+    </button>
         <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Manage Users</h2>
 
         <div className="flex items-center mb-6">

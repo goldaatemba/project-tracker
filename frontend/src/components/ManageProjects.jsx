@@ -94,6 +94,12 @@ function ManageProjects() {
 
   return (
     <div className="p-6 bg-blue-50 min-h-screen">
+      <button
+      onClick={() => navigate("/admin")}
+      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition"
+    >
+      Return
+    </button>
       <h2 className="text-3xl font-bold mb-6 text-blue-800">Manage Projects</h2>
 
       <div className="flex flex-wrap gap-4 mb-8">
