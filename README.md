@@ -72,7 +72,7 @@ The application is currently functioning as expected. No known bugs.
 Team Members:
 Alex Kimani:kimanialexk07@gmail.com
 Golda Atemba:goldaatemba610@gmail.com
-Bismark Bett:
+Bismark Bett:bettkipkoech45@gmail.com
 Christopher Ngili:
 
 ### License
