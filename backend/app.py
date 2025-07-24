@@ -19,8 +19,8 @@ db.init_app(app)
 migrate = Migrate(app, db)
 CORS(app,
      origins=[
-         "http://localhost:5173",  # local Vite dev
-         "https://project-bank-eight.vercel.app"  # your deployed frontend, if using Vercel
+         "http://localhost:5173",  
+         "https://project-tracker-phgl.vercel.app"
      ],
      supports_credentials=True,
      methods=["GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"],
@@ -32,7 +32,7 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'goldaatemba76@gmail.com'
-app.config['MAIL_PASSWORD'] = 'iwra vjbu ylzn vluq'  # Consider moving this to environment variable!
+app.config['MAIL_PASSWORD'] = 'iwra vjbu ylzn vluq'  
 app.config['MAIL_DEFAULT_SENDER'] = 'goldaatemba76@gmail.com'
 mail = Mail(app)
 
