@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImg from "/projecthero.png";
 import colabImg from "/colab.png"; 
-import config from "../../public/config";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   useEffect(() => {
-    fetch(`https://project-bank-db99.onrender.com/projects?featured=true&_limit=3`)
+    fetch(`${API_URL}/projects?featured=true&_limit=3`)
       .then((res) => res.json())
       .then((data) => setFeaturedProjects(data))
       .catch((err) => console.error("Error fetching projects:", err));

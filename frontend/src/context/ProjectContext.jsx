@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
 import { toast } from 'react-toastify';
-import { api_url } from '../config.json';
+const api_url = import.meta.env.VITE_API_URL;
 
 export const ProjectContext = createContext();
 

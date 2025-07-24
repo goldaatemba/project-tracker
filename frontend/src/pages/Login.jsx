@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import 'react-toastify/dist/ReactToastify.css';
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function Login() {
@@ -19,7 +19,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://project-bank-db99.onrender.com/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -31,7 +31,7 @@ function Login() {
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem("token", data.access_token);
 
-      const userRes = await fetch('https://project-bank-db99.onrender.com/me', {
+      const userRes = await fetch(`${API_URL}/me`, {
         headers: {
           Authorization: `Bearer ${data.access_token}`,
         },
@@ -55,7 +55,7 @@ function Login() {
       const decoded = jwtDecode(credential);
       console.log("Decoded Google credential:", decoded);
 
-      const res = await fetch('https://project-bank-db99.onrender.com/login/google', {
+      const res = await fetch(`${API_URL}/login/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ credential }),
@@ -67,7 +67,7 @@ function Login() {
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem("token", data.access_token);
 
-      const userRes = await fetch('https://project-bank-db99.onrender.com/me', {
+      const userRes = await fetch(`${API_URL}/me`, {
         headers: {
           Authorization: `Bearer ${data.access_token}`,
         },

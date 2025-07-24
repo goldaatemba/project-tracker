@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function Register() {
@@ -20,7 +20,7 @@ function Register() {
     }
 
     try {
-      const res = await fetch('https://project-bank-db99.onrender.com/register', {
+      const res = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
@@ -31,7 +31,7 @@ function Register() {
       if (res.ok) {
         localStorage.setItem('access_token', data.access_token);
 
-        const userRes = await fetch('https://project-bank-db99.onrender.com/me', {
+        const userRes = await fetch(`${API_URL}/me`, {
           headers: {
             Authorization: `Bearer ${data.access_token}`,
           },

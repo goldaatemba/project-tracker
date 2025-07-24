@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 const EditProfile = () => {
@@ -24,7 +24,7 @@ const EditProfile = () => {
       return;
     }
 
-    fetch('https://project-bank-db99.onrender.com/me', {
+    fetch(`${API_URL}/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
@@ -69,7 +69,7 @@ const EditProfile = () => {
         ...(formData.newPassword && { newPassword: formData.newPassword }),
       };
 
-      const res = await fetch('https://project-bank-db99.onrender.com/update_user', {
+      const res = await fetch(`${API_URL}/update_user`, {
         method: 'PATCH', 
         headers: { 
           'Authorization': `Bearer ${token}`,

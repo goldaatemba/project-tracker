@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { api_url } from "../config.json";
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -14,7 +13,7 @@ function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const res = await fetch(
-        `https://project-bank-db99.onrender.com/users${showUnassigned ? "?unassigned=true" : ""}`,
+        `${API_URL}/users${showUnassigned ? "?unassigned=true" : ""}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -33,7 +32,7 @@ function ManageUsers() {
 
   const toggleBlock = async (user) => {
     try {
-      const res = await fetch("https://project-bank-db99.onrender.com/update_user", {
+      const res = await fetch(`${API_URL}/update_user`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +59,7 @@ function ManageUsers() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const res = await fetch(`https://project-bank-db99.onrender.com/delete_user_profile/${userId}`, {
+      const res = await fetch(`${API_URL}/delete_user_profile/${userId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

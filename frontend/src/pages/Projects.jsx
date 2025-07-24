@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ProjectCard from "../components/ProjectCard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -14,7 +14,7 @@ function Projects() {
   const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
-    fetch("https://project-bank-db99.onrender.com/projects")
+    fetch(`${API_URL}/projects`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch projects");
         return res.json();

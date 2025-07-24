@@ -1,2 +1,2 @@
-const api_url = "https://project-bank-db99.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL;
 export default api_url;

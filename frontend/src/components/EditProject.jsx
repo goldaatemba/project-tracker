@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { api_url } from "../config.json";
+
 
 
 const EditProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [project, setProject] = useState(null);
   const [members, setMembers] = useState([]);
@@ -17,7 +18,7 @@ const EditProject = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch(`https://project-bank-db99.onrender.com/projects/${id}`, {
+    fetch(`${API_URL}/projects/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : Promise.reject("Failed to fetch project"))
@@ -50,7 +51,7 @@ const EditProject = () => {
       github_link: project.link,
     };
 
-    fetch(`https://project-bank-db99.onrender.com/projects/${id}`, {
+    fetch(`${API_URL}/projects/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +68,7 @@ const EditProject = () => {
   };
 
   const handleRemoveMember = (userId) => {
-    fetch(`https://project-bank-db99.onrender.com/projects/${id}/remove_member`, {
+    fetch(`${API_URL}/projects/${id}/remove_member`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
