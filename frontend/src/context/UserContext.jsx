@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { api_url } from "../config.json";
+const api_url = import.meta.env.VITE_API_URL;
 
 
 

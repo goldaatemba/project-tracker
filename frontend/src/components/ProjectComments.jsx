@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function ProjectComments({ projectId }) {
@@ -12,12 +12,12 @@ function ProjectComments({ projectId }) {
 
 
   useEffect(() => {
-    fetch(`https://project-bank-db99.onrender.com/projects/${projectId}/comments`)
+    fetch(`${API_URL}/projects/${projectId}/comments`)
       .then((res) => res.json())
       .then(setComments)
       .catch(() => toast.error("Failed to load comments"));
 
-    fetch("https://project-bank-db99.onrender.com/me", {
+    fetch(`${API_URL}/me`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -29,7 +29,7 @@ function ProjectComments({ projectId }) {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    fetch(`https://project-bank-db99.onrender.com/projects/${projectId}/comments`, {
+    fetch(`${API_URL}/projects/${projectId}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ function ProjectComments({ projectId }) {
   };
 
   const handleSaveEdit = (id) => {
-    fetch(`https://project-bank-db99.onrender.com/comments/${id}`, {
+    fetch(`${API_URL}/comments/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ function ProjectComments({ projectId }) {
   };
 
   const handleDelete = (id) => {
-    fetch(`https://project-bank-db99.onrender.com/comments/${id}`, {
+    fetch(`${API_URL}/comments/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

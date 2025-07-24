@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function AddProjects() {
@@ -18,7 +19,7 @@ function AddProjects() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://project-bank-db99.onrender.com/me', {
+    fetch(`${API_URL}/me`, {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -43,7 +44,7 @@ function AddProjects() {
         toast.error('Failed to verify user.');
       });
 
-    fetch('https://project-bank-db99.onrender.com/cohorts', {
+    fetch(`${API_URL}/cohorts`, {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -93,7 +94,7 @@ function AddProjects() {
     };
 
     try {
-      const res = await fetch('https://project-bank-db99.onrender.com/projects', {
+      const res = await fetch(`${API_URL}/projects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

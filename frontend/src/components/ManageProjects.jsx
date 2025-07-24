@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 
-const api_url = "https://project-bank-db99.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL;
 const auth_token = localStorage.getItem("token");
 
 function ManageProjects() {
@@ -20,12 +20,12 @@ function ManageProjects() {
 
   useEffect(() => {
     fetchProjects();
-    fetch(`${api_url}/users`).then(res => res.json()).then(setUsers);
-    fetch(`${api_url}/cohorts`).then(res => res.json()).then(setCohorts);
+    fetch(`${API_URL}/users`).then(res => res.json()).then(setUsers);
+    fetch(`${API_URL}/cohorts`).then(res => res.json()).then(setCohorts);
   }, []);
 
   const fetchProjects = () => {
-    fetch(`${api_url}/projects`)
+    fetch(`${API_URL}/projects`)
       .then((res) => res.json())
       .then((data) => {
         setProjects(data);
@@ -47,7 +47,7 @@ function ManageProjects() {
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
 
-    fetch(`${api_url}/projects/${id}`, {
+    fetch(`${API_URL}/projects/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${auth_token}` },
     })
@@ -71,7 +71,7 @@ function ManageProjects() {
   const handleUpdate = (e) => {
     e.preventDefault();
 
-    fetch(`${api_url}/projects/${editingProject.id}`, {
+    fetch(`${API_URL}/projects/${editingProject.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

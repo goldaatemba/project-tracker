@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 function Navbar() {
@@ -26,7 +26,7 @@ function Navbar() {
     }
 
     try {
-      const res = await fetch("https://project-bank-db99.onrender.com/logout", {
+      const res = await fetch(`${API_URL}/logout`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

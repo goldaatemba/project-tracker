@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { api_url } from "../config.json";
 
 
-const api_url = "https://project-bank-db99.onrender.com";
+const api_url = import.meta.env.VITE_API_URL;
 
 export default function CohortDetail() {
   const { id } = useParams(); 

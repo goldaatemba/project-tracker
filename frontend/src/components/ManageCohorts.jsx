@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 
-const api_url = "https://project-bank-db99.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL;
 const auth_token = localStorage.getItem("access_token");
 
 export default function ManageCohorts() {
@@ -14,7 +14,7 @@ export default function ManageCohorts() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${api_url}/cohorts`, {
+    fetch(`${API_URL}/cohorts`, {
       headers: {
         Authorization: `Bearer ${auth_token}`,
       },
@@ -25,7 +25,7 @@ export default function ManageCohorts() {
   }, []);
 
   useEffect(() => {
-    fetch(`${api_url}/cohorts/unassigned`, {
+    fetch(`${API_URL}/cohorts/unassigned`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth_token}`,
@@ -39,7 +39,7 @@ export default function ManageCohorts() {
   const handleCreate = () => {
     if (!cohortName.trim()) return toast.warning("Cohort name is required");
   
-    fetch(`${api_url}/cohorts`, {
+    fetch(`${API_URL}/cohorts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function ManageCohorts() {
     )
       return;
   
-    fetch(`${api_url}/cohorts/${cohortId}`, {
+    fetch(`${API_URL}/cohorts/${cohortId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${auth_token}`,
@@ -91,7 +91,7 @@ export default function ManageCohorts() {
   
 
   const assignUser = (userId, cohortId) => {
-    fetch(`${api_url}/cohorts/assign_user`, {
+    fetch(`${API_URL}/cohorts/assign_user`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export default function ManageCohorts() {
   };
 
   const unassignUser = (userId, cohortId) => {
-    fetch(`${api_url}/cohorts/unassign_user`, {
+    fetch(`${API_URL}/cohorts/unassign_user`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

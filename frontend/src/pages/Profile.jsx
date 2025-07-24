@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Pencil } from 'lucide-react';
-import { api_url } from "../config.json";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 
 const Profile = () => {
@@ -17,7 +18,7 @@ const Profile = () => {
       return;
     }
 
-    fetch('https://project-bank-db99.onrender.com/me', {
+    fetch(`${API_URL}/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -41,7 +42,7 @@ const Profile = () => {
     const token = localStorage.getItem('access_token');
     if (!token || !user) return;
 
-    fetch('https://project-bank-db99.onrender.com/projects', {
+    fetch(`${API_URL}/projects`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -60,7 +61,7 @@ const Profile = () => {
     if (!token) return;
 
     try {
-      await fetch('https://project-bank-db99.onrender.com/logout', {
+      await fetch(`${API_URL}/logout`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
