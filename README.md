@@ -3,7 +3,7 @@
 
 #### The app is a project tracking system for Moringa School students, 15/07/2025
 
-#### **By Group 5 **
+#### **By: Golda Atemba, Alex Kimani, Bismark Bett and Christopher Ngili **
 
 ## => Description
 
@@ -49,8 +49,8 @@ The application enables Moringa students to store and access all past and presen
 
 ## Deployment
 
-* Live Frontend: [Project Tracker Frontend](https://your-frontend-url.netlify.app/)
-* Live Backend: [Project Tracker Backend](https://your-backend-url.onrender.com/)
+* Live Frontend: [Project Tracker Frontend](https://project-tracker-phgl.vercel.app/)
+* Live Backend: [Project Tracker Backend](https://project-bank-db99.onrender.com)
 
 ## Known Bugs
 
@@ -69,8 +69,11 @@ The application is currently functioning as expected. No known bugs.
 * Flask-Mail
 
 ## Support and contact details
-
-email :: [goldaatemba610@gmail.com](mailto:goldaatemba610@gmail.com)
+Team Members:
+Alex Kimani:kimanialexk07@gmail.com
+Golda Atemba:goldaatemba610@gmail.com
+Bismark Bett:
+Christopher Ngili:
 
 ### License
 
