@@ -73,7 +73,7 @@ Team Members:
 Alex Kimani:kimanialexk07@gmail.com
 Golda Atemba:goldaatemba610@gmail.com
 Bismark Bett:bettkipkoech45@gmail.com
-Christopher Ngili:
+Christopher Ngili:ngilichristopher@gmail.com
 
 ### License
 
