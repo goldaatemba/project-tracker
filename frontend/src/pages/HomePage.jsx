@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImg from "/projecthero.png";
 import colabImg from "/colab.png"; 
+import { UserContext } from "../context/UserContext";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
+  const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
     fetch(`${API_URL}/projects?featured=true&_limit=3`)
@@ -141,14 +143,15 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="bg-[#4F9CF9] text-white text-center py-6 mt-10">
-        <p className="text-md">
-          Are you an admin?{" "}
-          <Link to="/admin" className="underline font-semibold">
-            Go to Admin Dashboard
-          </Link>
-        </p>
-      </div>
+      {currentUser && currentUser.is_admin && (
+        <div className="bg-[#4F9CF9] text-white text-center py-6 mt-10">
+          <p className="text-md">
+            <Link to="/admin" className="underline font-semibold">
+              Go to Admin Dashboard
+            </Link>
+          </p>
+        </div>
+      )}
     </section>
   );
 }
