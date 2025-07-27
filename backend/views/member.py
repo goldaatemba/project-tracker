@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Member, User, Project
+from sqlalchemy.orm import joinedload
 from flask_cors import cross_origin
 
 member_bp = Blueprint("member_bp", __name__)
@@ -65,7 +66,11 @@ def update_member(id):
 @member_bp.route("/members/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_member(id):
-    member = Member.query.get_or_404(id)
+    member = Member.query.options(
+        joinedload(Member.project),
+        joinedload(Member.user)
+    ).get_or_404(id)
+
     current_user_id = get_jwt_identity()
 
     if member.project.owner_id != current_user_id and not member.user.is_admin:
