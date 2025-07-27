@@ -1,5 +1,9 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
+<<<<<<< HEAD
+=======
+const api_url = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 const MemberContext = createContext();
 

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { ToastContainer } from 'react-toastify';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,7 +14,7 @@ export default function Layout() {
       if (!token) return;
 
       try {
-        const res = await fetch("http://localhost:5000/me", {
+        const res = await fetch(`${API_URL}/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,3 +59,4 @@ export default function Layout() {
     </div>
   );
 }
+

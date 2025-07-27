@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+<<<<<<< HEAD
 
 const api_url = "http://localhost:5000";
 
 export default function CohortDetail() {
   const { id } = useParams(); // from route /cohorts/:id
+=======
+import { api_url } from "../config.json";
+
+
+const api_url = import.meta.env.VITE_API_URL;
+
+export default function CohortDetail() {
+  const { id } = useParams(); 
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
   const [cohort, setCohort] = useState(null);
   const [loading, setLoading] = useState(true);
 

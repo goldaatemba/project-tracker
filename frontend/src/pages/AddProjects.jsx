@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
 
 function AddProjects() {
   const [formData, setFormData] = useState({
@@ -12,57 +10,6 @@ function AddProjects() {
     techStack: '',
     groupMembers: '',
   });
-
-  const [cohorts, setCohorts] = useState([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch('http://localhost:5000/me', {
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          if (res.status === 401 || res.status === 403) {
-            navigate('/login');
-          }
-          throw new Error('Failed to fetch user');
-        }
-        return res.json();
-      })
-      .then((userData) => {
-        if (userData.is_blocked) {
-          navigate('/blocked');
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error('Failed to verify user.');
-      });
-
-    fetch('http://localhost:5000/cohorts', {
-      credentials: 'include',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          if (res.status === 401 || res.status === 403) {
-            navigate('/login');
-          }
-          throw new Error('Unauthorized or failed to fetch');
-        }
-        return res.json();
-      })
-      .then((data) => setCohorts(data))
-      .catch((err) => {
-        console.error(err);
-        toast.error('Failed to load cohorts.');
-      });
-  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,38 +22,8 @@ function AddProjects() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { projectName, description, githubLink, cohortId, techStack, groupMembers } = formData;
-
-    if (!projectName || !description || !cohortId || !techStack) {
-      toast.error('Please fill in all required fields.');
-      return;
-    }
-
-    const payload = {
-      name: projectName,
-      description,
-      github_link: githubLink,
-      cohort_id: parseInt(cohortId),
-      tech: techStack,
-      group_members: groupMembers,
-    };
-
-    try {
-      const res = await fetch('http://localhost:5000/projects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || 'Failed to submit project');
-      }
-
-      toast.success('Project submitted!');
+    if (formData.projectName && formData.description) {
+      toast.success('🚀 Project submitted successfully!');
       setFormData({
         projectName: '',
         description: '',

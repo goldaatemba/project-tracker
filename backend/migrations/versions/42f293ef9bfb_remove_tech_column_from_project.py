@@ -1,7 +1,11 @@
 """Remove tech column from Project
 
 Revision ID: 42f293ef9bfb
+<<<<<<< HEAD
 Revises:
+=======
+Revises: 
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 Create Date: 2025-07-21 21:39:25.849373
 
 """

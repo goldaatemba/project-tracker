@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
+const API_URL = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -12,7 +16,11 @@ function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const res = await fetch(
+<<<<<<< HEAD
         `http://localhost:5000/users${showUnassigned ? "?unassigned=true" : ""}`,
+=======
+        `${API_URL}/users${showUnassigned ? "?unassigned=true" : ""}`,
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         {
           headers: {
             "Content-Type": "application/json",
@@ -31,7 +39,11 @@ function ManageUsers() {
 
   const toggleBlock = async (user) => {
     try {
+<<<<<<< HEAD
       const res = await fetch("http://localhost:5000/update_user", {
+=======
+      const res = await fetch(`${API_URL}/update_user`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +70,11 @@ function ManageUsers() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
+<<<<<<< HEAD
       const res = await fetch(`http://localhost:5000/delete_user_profile/${userId}`, {
+=======
+      const res = await fetch(`${API_URL}/delete_user_profile/${userId}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

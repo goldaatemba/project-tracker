@@ -1,15 +1,14 @@
-# project-tracker
 # ProjectBank
 
 #### The app is a project tracking system for Moringa School students, 15/07/2025
 
-#### **By Group 5 **
+#### By: Golda Atemba, Alex Kimani, Bismark Bett and Christopher Ngili 
 
-## => Description
+## Description
 
 The application enables Moringa students to store and access all past and present projects organized by cohort and tech stack. Students can browse, upload, and manage their projects while also collaborating with others. The platform ensures easy tracking, inspiration, and reuse of student work.
 
-## => Features / User Stories
+## Features / User Stories
 
 ### A Student Can:
 
@@ -29,10 +28,19 @@ The application enables Moringa students to store and access all past and presen
 * Edit or delete projects that violate guidelines.
 * Ensure credibility by moderating content.
 
-## => Setup/Installation Requirements
+## Setup/Installation Requirements
+### Prerequisites
+* Node.js
 
-* Download or clone the repository to your local machine
-* Open the project folder with VS Code
+* npm or yarn
+
+* Python 3.8+
+
+* Flask
+
+* PostgreSQL
+
+  
 
 ### Backend (Flask)
 
@@ -49,8 +57,8 @@ The application enables Moringa students to store and access all past and presen
 
 ## Deployment
 
-* Live Frontend: [Project Tracker Frontend](https://your-frontend-url.netlify.app/)
-* Live Backend: [Project Tracker Backend](https://your-backend-url.onrender.com/)
+* Live Frontend: [Project Tracker Frontend](https://project-tracker-phgl.vercel.app/)
+* Live Backend: [Project Tracker Backend](https://project-bank-db99.onrender.com)
 
 ## Known Bugs
 
@@ -69,8 +77,11 @@ The application is currently functioning as expected. No known bugs.
 * Flask-Mail
 
 ## Support and contact details
-
-email :: [goldaatemba610@gmail.com](mailto:goldaatemba610@gmail.com)
+Team Members:
+Alex Kimani:kimanialexk07@gmail.com
+Golda Atemba:goldaatemba610@gmail.com
+Bismark Bett:bettkipkoech45@gmail.com
+Christopher Ngili:ngilichristopher@gmail.com
 
 ### License
 

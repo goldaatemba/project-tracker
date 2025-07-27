@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+<<<<<<< HEAD
 const api_url = "http://localhost:5000";
+=======
+
+const API_URL = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 const auth_token = localStorage.getItem("token");
 
 function ManageProjects() {
@@ -19,12 +24,21 @@ function ManageProjects() {
 
   useEffect(() => {
     fetchProjects();
+<<<<<<< HEAD
     fetch(`${api_url}/users`).then(res => res.json()).then(setUsers);
     fetch(`${api_url}/cohorts`).then(res => res.json()).then(setCohorts);
   }, []);
 
   const fetchProjects = () => {
     fetch(`${api_url}/projects`)
+=======
+    fetch(`${API_URL}/users`).then(res => res.json()).then(setUsers);
+    fetch(`${API_URL}/cohorts`).then(res => res.json()).then(setCohorts);
+  }, []);
+
+  const fetchProjects = () => {
+    fetch(`${API_URL}/projects`)
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       .then((res) => res.json())
       .then((data) => {
         setProjects(data);
@@ -46,7 +60,11 @@ function ManageProjects() {
   const handleDelete = (id) => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
 
+<<<<<<< HEAD
     fetch(`${api_url}/projects/${id}`, {
+=======
+    fetch(`${API_URL}/projects/${id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "DELETE",
       headers: { Authorization: `Bearer ${auth_token}` },
     })
@@ -70,7 +88,11 @@ function ManageProjects() {
   const handleUpdate = (e) => {
     e.preventDefault();
 
+<<<<<<< HEAD
     fetch(`${api_url}/projects/${editingProject.id}`, {
+=======
+    fetch(`${API_URL}/projects/${editingProject.id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

@@ -21,7 +21,11 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+<<<<<<< HEAD
     cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)
+=======
+    cohort_id = db.Column(db.Integer, db.ForeignKey('cohorts.id'), nullable=True)  
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
     owned_projects = db.relationship('Project', backref='owner', lazy=True, cascade="all, delete-orphan")
     memberships = db.relationship('Member', backref='user', lazy=True, cascade="all, delete-orphan")
@@ -59,6 +63,7 @@ class Cohort(db.Model):
 
     def __repr__(self):
         return f"<Cohort {self.id} - {self.name}>"
+<<<<<<< HEAD
 
     def to_dict(self):
         return {
@@ -73,7 +78,23 @@ class Cohort(db.Model):
             } for member in self.members
         ]
         }
+=======
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_at": self.created_at.isoformat(),
+            "members": [
+            {
+                "id": member.id,
+                "username": member.username,
+                "email": member.email
+            } for member in self.members
+        ]
+        }
+    
 class Project(db.Model):
     __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)

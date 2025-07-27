@@ -1,7 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { api_url } from "../config.json";
+=======
+const api_url = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 
 
@@ -69,7 +73,11 @@ export const UserProvider = ({ children }) => {
           setAuthToken(data.access_token);
 
           // Fetch current user after login
+<<<<<<< HEAD
           fetch(`${api_url}/current_user`, {
+=======
+          fetch(`${api_url}/me`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -98,6 +106,12 @@ export const UserProvider = ({ children }) => {
       });
   }
 
+<<<<<<< HEAD
+=======
+
+
+  
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
   // ========= Logout User =========
   function logout_user() {
     fetch(`${api_url}/logout`, {
@@ -178,7 +192,11 @@ export const UserProvider = ({ children }) => {
   // ========= Get Current User =========
   useEffect(() => {
     if (auth_token) {
+<<<<<<< HEAD
       fetch(`${api_url}/current_user`, {
+=======
+      fetch(`${api_url}/me`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -204,6 +222,11 @@ export const UserProvider = ({ children }) => {
   const context_data = {
     auth_token,
     currentUser,
+<<<<<<< HEAD
+=======
+    setAuthToken,
+    setCurrentUser,
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
     register_user,
     login_user,
     logout_user,
@@ -212,4 +235,8 @@ export const UserProvider = ({ children }) => {
   };
 
   return <UserContext.Provider value={context_data}>{children}</UserContext.Provider>;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef

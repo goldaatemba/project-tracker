@@ -27,7 +27,11 @@ def create_project():
         github_link=data["github_link"],
         owner_id=current_user_id,
         cohort_id=cohort_id,
+<<<<<<< HEAD
         tech=data.get("tech"),
+=======
+        tech=data.get("tech"),  
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         created_at=datetime.datetime.utcnow()
     )
 
@@ -36,7 +40,11 @@ def create_project():
     return jsonify({"success": "Project created", "id": new_project.id}), 201
 
 @project_bp.route("/projects/<int:id>", methods=["GET"])
+<<<<<<< HEAD
 @cross_origin()
+=======
+@cross_origin() 
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 def get_project(id):
     project = Project.query.get_or_404(id)
 
@@ -69,7 +77,11 @@ def get_project(id):
 @project_bp.route("/projects", methods=["GET"])
 def get_all_projects():
     projects = Project.query.all()
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
     result = []
     for p in projects:
         result.append({
@@ -82,7 +94,11 @@ def get_all_projects():
                 "id": p.cohort.id,
                 "name": p.cohort.name
             } if p.cohort else None,
+<<<<<<< HEAD
             "stack": p.tech or "Unknown",
+=======
+            "stack": p.tech or "Unknown", 
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
             "created_at": p.created_at.strftime('%Y-%m-%d') if p.created_at else None,
             "owner_id": p.owner_id,
             "owner": p.owner.username if p.owner else None,

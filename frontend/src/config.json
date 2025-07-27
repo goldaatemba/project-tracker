@@ -1,4 +1,8 @@
 {
+<<<<<<< HEAD
     "api_url":"http://localhost:5000"
+=======
+    "api_url":"https://project-bank-db99.onrender.com"
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 }

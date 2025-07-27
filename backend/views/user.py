@@ -159,7 +159,11 @@ def fetch_user_by_id(user_id):
 @user_bp.route("/users", methods=["GET"])
 def fetch_all_users():
     unassigned = request.args.get("unassigned")
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
     if unassigned == "true":
         users = User.query.filter(User.cohort_id == None).all()
     else:

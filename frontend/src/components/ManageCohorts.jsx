@@ -3,7 +3,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
+<<<<<<< HEAD
 const api_url = "http://localhost:5000";
+=======
+
+const API_URL = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 const auth_token = localStorage.getItem("access_token");
 
 export default function ManageCohorts() {
@@ -13,7 +18,11 @@ export default function ManageCohorts() {
   const navigate = useNavigate();
 
   useEffect(() => {
+<<<<<<< HEAD
     fetch(`${api_url}/cohorts`, {
+=======
+    fetch(`${API_URL}/cohorts`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: {
         Authorization: `Bearer ${auth_token}`,
       },
@@ -24,7 +33,11 @@ export default function ManageCohorts() {
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
     fetch(`${api_url}/cohorts/unassigned`, {
+=======
+    fetch(`${API_URL}/cohorts/unassigned`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth_token}`,
@@ -38,7 +51,11 @@ export default function ManageCohorts() {
   const handleCreate = () => {
     if (!cohortName.trim()) return toast.warning("Cohort name is required");
   
+<<<<<<< HEAD
     fetch(`${api_url}/cohorts`, {
+=======
+    fetch(`${API_URL}/cohorts`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +84,11 @@ export default function ManageCohorts() {
     )
       return;
   
+<<<<<<< HEAD
     fetch(`${api_url}/cohorts/${cohortId}`, {
+=======
+    fetch(`${API_URL}/cohorts/${cohortId}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${auth_token}`,
@@ -90,7 +111,11 @@ export default function ManageCohorts() {
   
 
   const assignUser = (userId, cohortId) => {
+<<<<<<< HEAD
     fetch(`${api_url}/cohorts/assign_user`, {
+=======
+    fetch(`${API_URL}/cohorts/assign_user`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -118,7 +143,11 @@ export default function ManageCohorts() {
   };
 
   const unassignUser = (userId, cohortId) => {
+<<<<<<< HEAD
     fetch(`${api_url}/cohorts/unassign_user`, {
+=======
+    fetch(`${API_URL}/cohorts/unassign_user`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

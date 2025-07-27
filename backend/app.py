@@ -11,23 +11,39 @@ load_dotenv()
 
 app = Flask(__name__)
 
+<<<<<<< HEAD
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project_tracking.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
+=======
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://pb_db_uxkt_user:Ui8z1zdKK9UZz5GlK5kDCMVo2V2i9QBN@dpg-d20k3cre5dus73dgmi4g-a.oregon-postgres.render.com/pb_db_uxkt'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+migrate = Migrate(app, db)
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 CORS(app,
-     origins=["http://localhost:5173"],
+     origins=[
+         "http://localhost:5173",  
+         "https://project-tracker-phgl.vercel.app"
+     ],
      supports_credentials=True,
      methods=["GET", "POST", "OPTIONS", "PUT", "DELETE", "PATCH"],
      allow_headers=["Content-Type", "Authorization"])
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'goldaatemba76@gmail.com'
-app.config['MAIL_PASSWORD'] = 'iwra vjbu ylzn vluq'  # Consider moving this to environment variable!
+app.config['MAIL_PASSWORD'] = 'iwra vjbu ylzn vluq'  
 app.config['MAIL_DEFAULT_SENDER'] = 'goldaatemba76@gmail.com'
 mail = Mail(app)
 

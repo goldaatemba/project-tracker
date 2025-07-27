@@ -33,7 +33,11 @@ def login():
 
         user = User.query.filter_by(email=email).first()
 
+<<<<<<< HEAD
         if user and user.check_password(password):
+=======
+        if user and user.check_password(password):  
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
             access_token = create_access_token(identity=user.id)
             return jsonify({'access_token': access_token}), 200
         else:
@@ -43,9 +47,15 @@ def login():
         print(" Error:", e)
         return jsonify({'error': 'Invalid JSON or server error'}), 400
 
+<<<<<<< HEAD
 
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required(locations=["headers"])
+=======
+    
+@auth_bp.route("/me", methods=["GET"])
+@jwt_required(locations=["headers"])  
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 def fetch_current_user():
     current_user_id = get_jwt_identity()
 

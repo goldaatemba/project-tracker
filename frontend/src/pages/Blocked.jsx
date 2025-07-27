@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import { AlertTriangle } from 'lucide-react'; // Optional icon
+=======
+import { AlertTriangle } from 'lucide-react'; 
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 const Blocked = () => {
   return (

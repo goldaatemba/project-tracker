@@ -1,56 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
+import { UserContext } from "../context/UserContext";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
   const [visible, setVisible] = useState(true);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     setIsLoggedIn(!!token);
   }, []);
+=======
+  const { auth_token, currentUser, logout_user } = useContext(UserContext);
+
+  const isLoggedIn = !!auth_token;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
   const toggleMenu = () => setIsOpen(!isOpen);
-
-  const handleLogout = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      console.warn("No token found.");
-      return;
-    }
-
-    try {
-      const res = await fetch("http://localhost:5000/logout", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        localStorage.removeItem("access_token");
-        setIsLoggedIn(false);
-        navigate("/login");
-      } else {
-        const data = await res.json();
-        console.error("Logout failed:", data);
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
-
-  const linkClass = "text-white hover:text-yellow-400 px-4 py-2 font-medium";
 
   const studentLinks = [
     { name: "Projects", path: "/projects" },
     { name: "Cohorts", path: "/cohorts" },
   ];
+
+  const linkClass = "text-white hover:text-yellow-400 px-4 py-2 font-medium";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,7 +70,7 @@ function Navbar() {
                 <User size={24} />
               </NavLink>
               <button
-                onClick={handleLogout}
+                onClick={logout_user}
                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-400 font-semibold"
               >
                 Logout
@@ -142,7 +119,7 @@ function Navbar() {
               </NavLink>
               <button
                 onClick={() => {
-                  handleLogout();
+                  logout_user();
                   setIsOpen(false);
                 }}
                 className="block w-full text-white text-center bg-red-500 rounded-lg px-4 py-2 font-semibold hover:bg-red-400"

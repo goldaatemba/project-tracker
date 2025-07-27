@@ -1,17 +1,25 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+<<<<<<< HEAD
 import { UserContext } from '../context/UserContext'; // adjust path if needed
+=======
+import { UserContext } from '../context/UserContext';
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 import 'react-toastify/dist/ReactToastify.css';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+  const { setAuthToken, setCurrentUser } = useContext(UserContext);
 
   const { setUser, setAuthToken } = useContext(UserContext);
 
@@ -20,7 +28,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -28,6 +36,7 @@ function Login() {
 
       if (!response.ok) throw new Error('Invalid email or password');
 
+<<<<<<< HEAD
       const data = await response.json();
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('token', data.access_token);
@@ -35,17 +44,35 @@ function Login() {
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: { Authorization: `Bearer ${data.access_token}` },
+=======
+      const { access_token } = await response.json();
+
+      setAuthToken(access_token);
+      localStorage.setItem('access_token', access_token);
+
+      const userRes = await fetch(`${API_URL}/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       });
 
       if (!userRes.ok) throw new Error('Failed to fetch user');
 
       const user = await userRes.json();
+<<<<<<< HEAD
       setUser(user); // set user in context
 
       toast.success(`Welcome back, ${user.username}!`);
       navigate(user.role === 'admin' ? '/admin' : '/');
+=======
+      setCurrentUser(user);
+
+      toast.success(`Welcome back, ${user.username || user.email || 'User'}!`);
+      navigate('/');
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -55,9 +82,12 @@ function Login() {
     try {
       const { credential } = credentialResponse;
       const decoded = jwtDecode(credential);
+<<<<<<< HEAD
       console.log('Decoded Google credential:', decoded);
+=======
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
-      const res = await fetch('http://localhost:5000/login/google', {
+      const res = await fetch(`${API_URL}/login/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ credential }),
@@ -65,6 +95,7 @@ function Login() {
 
       if (!res.ok) throw new Error('Google login failed');
 
+<<<<<<< HEAD
       const data = await res.json();
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('token', data.access_token);
@@ -72,17 +103,35 @@ function Login() {
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: { Authorization: `Bearer ${data.access_token}` },
+=======
+      const { access_token } = await res.json();
+
+      setAuthToken(access_token);
+      localStorage.setItem('access_token', access_token);
+
+      const userRes = await fetch(`${API_URL}/me`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       });
 
       if (!userRes.ok) throw new Error('Failed to fetch user');
 
       const user = await userRes.json();
+<<<<<<< HEAD
       setUser(user);
 
       toast.success(`Welcome Back, ${user.username}!`);
       navigate(user.role === 'admin' ? '/admin' : '/');
+=======
+      setCurrentUser(user);
+
+      toast.success(`Welcome, ${user.username || user.email || 'User'}!`);
+      navigate('/');
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message || 'Google login failed');
     }
   };
 
@@ -92,7 +141,10 @@ function Login() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-4 py-12">
+<<<<<<< HEAD
       <ToastContainer position="top-right" autoClose={3000} />
+=======
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl animate-fade-in">
         <div className="w-full md:w-1/2 p-10 bg-blue-100">
           <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Welcome Back</h2>

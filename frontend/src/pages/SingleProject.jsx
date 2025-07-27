@@ -3,6 +3,12 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import ProjectComments from "../components/ProjectComments";
 import "react-toastify/dist/ReactToastify.css";
+<<<<<<< HEAD
+=======
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 function SingleProject() {
   const { id } = useParams();
@@ -22,7 +28,11 @@ function SingleProject() {
       return;
     }
 
+<<<<<<< HEAD
     fetch("http://localhost:5000/me", {
+=======
+    fetch(`${API_URL}/me`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -38,7 +48,11 @@ function SingleProject() {
 
   useEffect(() => {
     setLoading(true);
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${id}`, {
+=======
+    fetch(`${API_URL}/projects/${id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then((res) => {
@@ -52,7 +66,11 @@ function SingleProject() {
 
   useEffect(() => {
     if (!token) return;
+<<<<<<< HEAD
     fetch("http://localhost:5000/users", {
+=======
+    fetch(`${API_URL}/users`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -74,7 +92,11 @@ function SingleProject() {
       return;
     }
 
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${project.id}/members`, {
+=======
+    fetch(`${API_URL}/projects/${project.id}/members`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -89,7 +111,11 @@ function SingleProject() {
       .then(() => {
         toast.success("Member added");
         setNewMemberUsername("");
+<<<<<<< HEAD
         return fetch(`http://localhost:5000/projects/${project.id}`, {
+=======
+        return fetch(`${API_URL}/projects/${project.id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
           headers: { Authorization: `Bearer ${token}` },
         });
       })
@@ -101,13 +127,21 @@ function SingleProject() {
   const handleDeleteMember = (memberId) => {
     if (!window.confirm("Remove this member?")) return;
 
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${project.id}/members/${memberId}`, {
+=======
+    fetch(`${API_URL}/projects/${project.id}/members/${memberId}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : Promise.reject())
       .then(() =>
+<<<<<<< HEAD
         fetch(`http://localhost:5000/projects/${project.id}`, {
+=======
+        fetch(`${API_URL}/projects/${project.id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
           headers: { Authorization: `Bearer ${token}` },
         })
       )
@@ -119,7 +153,11 @@ function SingleProject() {
   const handleDeleteProject = () => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
 
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${project.id}`, {
+=======
+    fetch(`${API_URL}/projects/${project.id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

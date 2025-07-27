@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 
+<<<<<<< HEAD
 const api_url = "http://localhost:5000";
+=======
+
+const api_url = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 export default function CohortProjects() {
   const [cohorts, setCohorts] = useState([]);

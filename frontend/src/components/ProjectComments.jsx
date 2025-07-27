@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+<<<<<<< HEAD
+=======
+const API_URL = import.meta.env.VITE_API_URL;
+
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 function ProjectComments({ projectId }) {
   const [comments, setComments] = useState([]);
@@ -8,13 +13,23 @@ function ProjectComments({ projectId }) {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
+<<<<<<< HEAD
   useEffect(() => {
     fetch(`http://localhost:5000/projects/${projectId}/comments`)
+=======
+
+  useEffect(() => {
+    fetch(`${API_URL}/projects/${projectId}/comments`)
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       .then((res) => res.json())
       .then(setComments)
       .catch(() => toast.error("Failed to load comments"));
 
+<<<<<<< HEAD
     fetch("http://localhost:5000/me", {
+=======
+    fetch(`${API_URL}/me`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -26,7 +41,11 @@ function ProjectComments({ projectId }) {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${projectId}/comments`, {
+=======
+    fetch(`${API_URL}/projects/${projectId}/comments`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +68,11 @@ function ProjectComments({ projectId }) {
   };
 
   const handleSaveEdit = (id) => {
+<<<<<<< HEAD
     fetch(`http://localhost:5000/comments/${id}`, {
+=======
+    fetch(`${API_URL}/comments/${id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +93,11 @@ function ProjectComments({ projectId }) {
   };
 
   const handleDelete = (id) => {
+<<<<<<< HEAD
     fetch(`http://localhost:5000/comments/${id}`, {
+=======
+    fetch(`${API_URL}/comments/${id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

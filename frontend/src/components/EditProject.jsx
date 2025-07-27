@@ -3,9 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+<<<<<<< HEAD
 const EditProject = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+=======
+
+
+const EditProject = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
   const [project, setProject] = useState(null);
   const [members, setMembers] = useState([]);
@@ -15,7 +24,11 @@ const EditProject = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${id}`, {
+=======
+    fetch(`${API_URL}/projects/${id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.ok ? res.json() : Promise.reject("Failed to fetch project"))
@@ -48,7 +61,11 @@ const EditProject = () => {
       github_link: project.link,
     };
 
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${id}`, {
+=======
+    fetch(`${API_URL}/projects/${id}`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +82,11 @@ const EditProject = () => {
   };
 
   const handleRemoveMember = (userId) => {
+<<<<<<< HEAD
     fetch(`http://localhost:5000/projects/${id}/remove_member`, {
+=======
+    fetch(`${API_URL}/projects/${id}/remove_member`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

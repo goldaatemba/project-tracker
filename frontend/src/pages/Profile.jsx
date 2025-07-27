@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Pencil } from 'lucide-react';
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -15,7 +18,11 @@ const Profile = () => {
       return;
     }
 
+<<<<<<< HEAD
     fetch('http://localhost:5000/me', {
+=======
+    fetch(`${API_URL}/me`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -39,7 +46,11 @@ const Profile = () => {
     const token = localStorage.getItem('access_token');
     if (!token || !user) return;
 
+<<<<<<< HEAD
     fetch('http://localhost:5000/projects', {
+=======
+    fetch(`${API_URL}/projects`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -58,7 +69,11 @@ const Profile = () => {
     if (!token) return;
 
     try {
+<<<<<<< HEAD
       await fetch('http://localhost:5000/logout', {
+=======
+      await fetch(`${API_URL}/logout`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

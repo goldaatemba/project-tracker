@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ProjectCard from "../components/ProjectCard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Projects() {
   const [projects, setProjects] = useState([]);
@@ -13,7 +14,7 @@ function Projects() {
   const [sortOrder, setSortOrder] = useState("newest");
 
   useEffect(() => {
-    fetch("http://localhost:5000/projects")
+    fetch(`${API_URL}/projects`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch projects");
         return res.json();

@@ -7,7 +7,11 @@ from flask_cors import cross_origin
 member_bp = Blueprint("member_bp", __name__)
 
 @member_bp.route("/projects/<int:project_id>/members", methods=["POST", "OPTIONS"])
+<<<<<<< HEAD
 @cross_origin(origins=["http://localhost:5173"], supports_credentials=True)
+=======
+@cross_origin(origins=["https://projecttracker-neon.vercel.app/"], supports_credentials=True)
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 @jwt_required()
 def add_member_to_project(project_id):
     data = request.get_json()
@@ -95,7 +99,11 @@ def remove_user_from_project(project_id, user_id):
 
 
 @member_bp.route("/members", methods=["POST", "OPTIONS"])
+<<<<<<< HEAD
 @cross_origin(origins=["http://localhost:5173"], supports_credentials=True)
+=======
+@cross_origin(origins=["https://projecttracker-neon.vercel.app/"], supports_credentials=True)
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 @jwt_required()
 def add_member():
     data = request.get_json()

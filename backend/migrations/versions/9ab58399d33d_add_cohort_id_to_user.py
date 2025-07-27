@@ -21,7 +21,11 @@ def upgrade():
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.add_column(sa.Column('cohort_id', sa.Integer(), nullable=True))
         batch_op.create_foreign_key(
+<<<<<<< HEAD
     'fk_users_cohort_id',
+=======
+    'fk_users_cohort_id',  
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
     'cohorts',
     ['cohort_id'],
     ['id']

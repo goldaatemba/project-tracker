@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+<<<<<<< HEAD
+=======
+const API_URL = import.meta.env.VITE_API_URL;
+
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +27,11 @@ const EditProfile = () => {
       return;
     }
 
+<<<<<<< HEAD
     fetch('http://localhost:5000/me', {
+=======
+    fetch(`${API_URL}/me`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
@@ -67,7 +76,11 @@ const EditProfile = () => {
         ...(formData.newPassword && { newPassword: formData.newPassword }),
       };
 
+<<<<<<< HEAD
       const res = await fetch('http://localhost:5000/update_user', {
+=======
+      const res = await fetch(`${API_URL}/update_user`, {
+>>>>>>> 724b19b537b6a55800761f0ce22fe93355c3e8ef
         method: 'PATCH', 
         headers: { 
           'Authorization': `Bearer ${token}`,
