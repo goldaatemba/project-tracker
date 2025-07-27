@@ -12,11 +12,11 @@ function Root() {
   return (
     <React.StrictMode>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <UserProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </UserProvider>
+        <BrowserRouter>
+          <UserProvider>
+              <App />
+          </UserProvider>
+        </BrowserRouter>
       </GoogleOAuthProvider>
     </React.StrictMode>
   );
