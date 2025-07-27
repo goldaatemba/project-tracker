@@ -21,9 +21,9 @@ function ProjectCard({ project }) {
         <strong>Owner:</strong> {project.owner || 'Unknown'}
       </p>
 
-      <p className="text-sm text-gray-600 mb-3">
+{/*       <p className="text-sm text-gray-600 mb-3">
         <strong>Members:</strong> {project.members?.join(', ') || 'None'}
-      </p>
+      </p> */}
 
       <div className="flex justify-between items-center mt-3">
         <p className="text-sm text-gray-500">
