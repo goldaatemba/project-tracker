@@ -96,7 +96,10 @@ def remove_user_from_project(project_id, user_id):
         return jsonify({"error": "Member not found"}), 404
 
     current_user_id = get_jwt_identity()
-    if member.project.owner_id != current_user_id and not member.user.is_admin:
+
+    current_user = User.query.get(current_user_id)
+
+    if member.project.owner_id != current_user_id and not current_user.is_admin:
         return jsonify({"error": "Unauthorized"}), 403
 
     db.session.delete(member)
