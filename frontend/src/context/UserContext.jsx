@@ -50,7 +50,7 @@ export const UserProvider = ({ children }) => {
   }
 
   // ========= Login User =========
-  function login_user(email, password, redirect = "/") {
+  function login_user(email, password, redirect = "/access") {
     toast.loading("Logging you in...");
 
     fetch(`${api_url}/login`, {
