@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { UserContext } from '../context/UserContext';
 import 'react-toastify/dist/ReactToastify.css';
-const API_URL = import.meta.env.VITE_API_URL;
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+  const { setAuthToken, setCurrentUser } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,23 +30,26 @@ function Login() {
 
       if (!response.ok) throw new Error('Invalid email or password');
 
-      const data = await response.json();
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem("token", data.access_token);
+      const { access_token } = await response.json();
+
+      setAuthToken(access_token);
+      localStorage.setItem('access_token', access_token);
 
       const userRes = await fetch(`${API_URL}/me`, {
         headers: {
-          Authorization: `Bearer ${data.access_token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       });
 
       if (!userRes.ok) throw new Error('Failed to fetch user');
 
       const user = await userRes.json();
-      toast.success(`Welcome back, ${user.username}!`);
+      setCurrentUser(user);
+
+      toast.success(`Welcome back, ${user.username || user.email || 'User'}!`);
       navigate('/');
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -53,7 +59,6 @@ function Login() {
     try {
       const { credential } = credentialResponse;
       const decoded = jwtDecode(credential);
-      console.log("Decoded Google credential:", decoded);
 
       const res = await fetch(`${API_URL}/login/google`, {
         method: 'POST',
@@ -63,23 +68,26 @@ function Login() {
 
       if (!res.ok) throw new Error('Google login failed');
 
-      const data = await res.json();
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem("token", data.access_token);
+      const { access_token } = await res.json();
+
+      setAuthToken(access_token);
+      localStorage.setItem('access_token', access_token);
 
       const userRes = await fetch(`${API_URL}/me`, {
         headers: {
-          Authorization: `Bearer ${data.access_token}`,
+          Authorization: `Bearer ${access_token}`,
         },
       });
 
       if (!userRes.ok) throw new Error('Failed to fetch user');
 
       const user = await userRes.json();
-      toast.success(`Welcome, ${user.username}!`);
+      setCurrentUser(user);
+
+      toast.success(`Welcome, ${user.username || user.email || 'User'}!`);
       navigate('/');
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.message || 'Google login failed');
     }
   };
 

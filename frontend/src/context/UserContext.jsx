@@ -207,6 +207,8 @@ export const UserProvider = ({ children }) => {
   const context_data = {
     auth_token,
     currentUser,
+    setAuthToken,
+    setCurrentUser,
     register_user,
     login_user,
     logout_user,

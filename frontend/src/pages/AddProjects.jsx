@@ -125,7 +125,7 @@ function AddProjects() {
 
   return (
     <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-8">
-      <h2 className="text-3xl font-semibold text-center mb-6">🚀 Submit a Project</h2>
+      <h2 className="text-3xl font-semibold text-center mb-6">Submit a Project</h2>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block mb-1 font-medium">Project Name *</label>
