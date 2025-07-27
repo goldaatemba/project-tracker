@@ -50,104 +50,55 @@ export const UserProvider = ({ children }) => {
   }
 
   // ========= Login User =========
-  // function login_user(email, password, redirect = "/access") {
-  //   toast.loading("Logging you in...");
-
-  //   fetch(`${api_url}/login`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ email, password }),
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       toast.dismiss();
-  //       if (data.error) toast.error(data.error);
-  //       else if (data.access_token) {
-  //         localStorage.setItem("access_token", data.access_token);
-  //         setAuthToken(data.access_token);
-
-  //         // Fetch current user after login
-  //         fetch(`${api_url}/me`, {
-  //           method: "GET",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${data.access_token}`,
-  //           },
-  //         })
-  //           .then(res => res.json())
-  //           .then(userData => {
-  //             if (userData.is_blocked) {
-  //               toast.error("Your account is blocked. Contact admin.");
-  //               localStorage.removeItem("access_token");
-  //               setAuthToken(null);
-  //             } else {
-  //               setCurrentUser(userData);
-  //               toast.success("Logged in successfully!");
-  //               navigate(redirect);
-  //             }
-  //           });
-  //       } else {
-  //         toast.error("Login failed. Try again.");
-  //       }
-  //     })
-  //     .catch(() => {
-  //       toast.dismiss();
-  //       toast.error("Network error during login.");
-  //     });
-  // }
-
-
   function login_user(email, password, redirect = "/access") {
-  toast.loading("Logging you in...");
-  fetch(`${api_url}/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      toast.dismiss();
-      if (data.error) {
-        toast.error(data.error);
-      } else if (data.access_token) {
-        localStorage.setItem("access_token", data.access_token);
-        setAuthToken(data.access_token);
-        return fetch(`${api_url}/me`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${data.access_token}`,
-          },
-        });
-      } else {
-        toast.error("Login failed. Try again.");
-        throw new Error("Login failed.");
-      }
-    })
-    .then((res) => res.json())
-    .then((userData) => {
-      if (userData.is_blocked) {
-        toast.error("Your account is blocked. Contact admin.");
-        localStorage.removeItem("access_token");
-        setAuthToken(null);
-      } else {
-        setCurrentUser(userData);
-        toast.success("Logged in successfully!");
-        navigate(redirect);
-      }
-    })
-    .catch((error) => {
-      toast.dismiss();
-      toast.error("Network error during login.");
-      console.error("Login error:", error);
-    });
-}
+    toast.loading("Logging you in...");
 
-  
+    fetch(`${api_url}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        toast.dismiss();
+        if (data.error) toast.error(data.error);
+        else if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token);
+          setAuthToken(data.access_token);
+
+          // Fetch current user after login
+          fetch(`${api_url}/me`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${data.access_token}`,
+            },
+          })
+            .then(res => res.json())
+            .then(userData => {
+              if (userData.is_blocked) {
+                toast.error("Your account is blocked. Contact admin.");
+                localStorage.removeItem("access_token");
+                setAuthToken(null);
+              } else {
+                setCurrentUser(userData);
+                toast.success("Logged in successfully!");
+                navigate(redirect);
+              }
+            });
+        } else {
+          toast.error("Login failed. Try again.");
+        }
+      })
+      .catch(() => {
+        toast.dismiss();
+        toast.error("Network error during login.");
+      });
+  }
+
+
 
   
   // ========= Logout User =========
