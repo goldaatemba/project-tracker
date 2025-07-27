@@ -69,7 +69,7 @@ export const UserProvider = ({ children }) => {
           setAuthToken(data.access_token);
 
           // Fetch current user after login
-          fetch(`${api_url}/current_user`, {
+          fetch(`${api_url}/me`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -178,7 +178,7 @@ export const UserProvider = ({ children }) => {
   // ========= Get Current User =========
   useEffect(() => {
     if (auth_token) {
-      fetch(`${api_url}/current_user`, {
+      fetch(`${api_url}/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
