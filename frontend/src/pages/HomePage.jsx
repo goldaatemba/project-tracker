@@ -144,7 +144,7 @@ export default function Home() {
       <div className="bg-[#4F9CF9] text-white text-center py-6 mt-10">
         <p className="text-md">
           Are you an admin?{" "}
-          <Link to="/admin" className="underline font-semibold">
+          <Link to="/login" className="underline font-semibold">
             Go to Admin Dashboard
           </Link>
         </p>
