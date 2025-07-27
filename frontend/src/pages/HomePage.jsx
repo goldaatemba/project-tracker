@@ -8,7 +8,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
-  const { user } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
+
 
   useEffect(() => {
     fetch(`${API_URL}/projects?featured=true&_limit=3`)
@@ -143,7 +144,7 @@ export default function Home() {
         </div>
       </div>
 
-      {user && user.is_admin && (
+      {currentUser && currentUser.is_admin && (
         <div className="bg-[#4F9CF9] text-white text-center py-6 mt-10">
           <p className="text-md">
             <Link to="/admin" className="underline font-semibold">
