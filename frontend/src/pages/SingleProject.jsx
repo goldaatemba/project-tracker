@@ -137,7 +137,6 @@ function SingleProject() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <ToastContainer />
         <p className="text-gray-500 text-lg">Loading project...</p>
       </div>
     );
@@ -146,7 +145,6 @@ function SingleProject() {
   if (!project) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <ToastContainer />
         <p className="text-red-500 text-lg">Project not found.</p>
       </div>
     );
@@ -158,7 +156,6 @@ function SingleProject() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10 md:px-10">
-      <ToastContainer />
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6">
         <Link
           to="/projects"
