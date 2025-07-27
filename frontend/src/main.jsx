@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { UserProvider } from './context/UserContext'; 
+import { UserContext } from './context/UserContext'; 
 import { useState } from 'react';
 
 const GOOGLE_CLIENT_ID = '54790823933-pl1q47ujvtjdefs0bvnf37qk7rhl63ku.apps.googleusercontent.com'; 
@@ -16,11 +16,11 @@ function Root() {
   return (
     <React.StrictMode>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        <UserProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </UserProvider>
+      <UserContext.Provider value={{ auth_token, setAuthToken, user, setUser }}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </UserContext.Provider>
       </GoogleOAuthProvider>
     </React.StrictMode>
   );
