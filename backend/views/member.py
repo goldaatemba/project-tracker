@@ -3,11 +3,14 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Member, User, Project
 from flask_cors import cross_origin
 
-
 member_bp = Blueprint("member_bp", __name__)
 
 @member_bp.route("/projects/<int:project_id>/members", methods=["POST", "OPTIONS"])
-@cross_origin(origins=["https://project-tracker-phgl.vercel.app/"], supports_credentials=True)
+@cross_origin(
+    origins=["https://project-tracker-phgl.vercel.app"],
+    methods=["POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
 @jwt_required()
 def add_member_to_project(project_id):
     data = request.get_json()
@@ -28,6 +31,7 @@ def add_member_to_project(project_id):
     db.session.add(member)
     db.session.commit()
     return jsonify(member.to_dict()), 201
+
 
 @member_bp.route("/members/<int:id>", methods=["GET"])
 def get_member(id):
@@ -58,7 +62,6 @@ def update_member(id):
     return jsonify(member.to_dict()), 200
 
 
-
 @member_bp.route("/members/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_member(id):
@@ -72,10 +75,12 @@ def delete_member(id):
     db.session.commit()
     return jsonify({"message": f"Removed member {id} from project"}), 200
 
+
 @member_bp.route("/projects/<int:project_id>/members", methods=["GET"])
 def get_members_by_project(project_id):
     members = Member.query.filter_by(project_id=project_id).all()
     return jsonify([m.to_dict() for m in members]), 200
+
 
 @member_bp.route("/projects/<int:project_id>/members/<int:user_id>", methods=["DELETE"])
 @jwt_required()
@@ -95,7 +100,11 @@ def remove_user_from_project(project_id, user_id):
 
 
 @member_bp.route("/members", methods=["POST", "OPTIONS"])
-@cross_origin(origins=["https://project-tracker-phgl.vercel.app/"], supports_credentials=True)
+@cross_origin(
+    origins=["https://project-tracker-phgl.vercel.app"],
+    methods=["POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
 @jwt_required()
 def add_member():
     data = request.get_json()
