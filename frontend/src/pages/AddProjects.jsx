@@ -196,7 +196,7 @@ function AddProjects() {
             <option value="IoT">IoT</option>
           </select>
         </div>
-        <div>
+{/*         <div>
           <label className="block mb-1 font-medium">Group Members</label>
           <input
             type="text"
@@ -206,7 +206,7 @@ function AddProjects() {
             className="w-full p-3 border border-gray-300 rounded-lg"
             placeholder="e.g., Alice, Bob, Carlos"
           />
-        </div>
+        </div> */}
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700"
