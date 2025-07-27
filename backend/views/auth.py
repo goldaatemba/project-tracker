@@ -31,10 +31,9 @@ def login():
         if not email or not password:
             return jsonify({'error': 'Missing credentials'}), 400
 
-        # Dummy example: replace with actual query
         user = User.query.filter_by(email=email).first()
 
-        if user and user.check_password(password):  # Assuming hashed check
+        if user and user.check_password(password):
             access_token = create_access_token(identity=user.id)
             return jsonify({'access_token': access_token}), 200
         else:
@@ -44,34 +43,22 @@ def login():
         print(" Error:", e)
         return jsonify({'error': 'Invalid JSON or server error'}), 400
 
-    
-@auth_bp.route("/me", methods=["GET", "OPTIONS"])
-@jwt_required() 
-def fetch_current_user():
-    if request.method == "OPTIONS":
-        return '', 200
 
+@auth_bp.route("/me", methods=["GET"])
+@jwt_required(locations=["headers"])
+def fetch_current_user():
     current_user_id = get_jwt_identity()
 
     if not current_user_id:
         return jsonify({"error": "Not authenticated"}), 401
-    
-    
+
     user = User.query.get(current_user_id)
 
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    return jsonify({
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "is_admin": user.is_admin,
-        "is_blocked": user.is_blocked
-    }), 200
+    return jsonify(user.to_dict()), 200
 
-
-# Logout
 @auth_bp.route("/logout", methods=["DELETE"])
 @jwt_required()
 def modify_token():
@@ -89,12 +76,11 @@ def modify_token():
 def google_login():
     if request.method == "OPTIONS":
         return '', 204
-    
+
     data = request.get_json()
     token = data.get('credential')
 
     try:
-        # Verify Google ID token
         idinfo = id_token.verify_oauth2_token(
             token,
             google_requests.Request(),
@@ -114,5 +100,5 @@ def google_login():
         return jsonify({'access_token': access_token}), 200
 
     except ValueError as e:
-        print("🔴 Google token validation failed:", e)
+        print(" Google token validation failed:", e)
         return jsonify({"error": "Invalid Google token"}), 400

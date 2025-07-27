@@ -27,6 +27,7 @@ function Login() {
 
       const data = await response.json();
       localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem("token", data.access_token);
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: {
@@ -62,6 +63,7 @@ function Login() {
 
       const data = await res.json();
       localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem("token", data.access_token);
 
       const userRes = await fetch('http://localhost:5000/me', {
         headers: {
@@ -85,9 +87,7 @@ function Login() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 px-4 py-12">
-      <ToastContainer />
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl animate-fade-in">
-        {/* Left Side: Form */}
         <div className="w-full md:w-1/2 p-10 bg-blue-100">
           <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Welcome Back</h2>
 
@@ -148,7 +148,6 @@ function Login() {
           </div>
         </div>
 
-        {/* Right Side: Image */}
         <div className="w-full md:w-1/2 bg-blue-500 flex items-center justify-center p-6">
           <img
             src="/project1.png"
@@ -158,7 +157,6 @@ function Login() {
         </div>
       </div>
 
-      {/* Footer */}
       <p className="mt-6 text-sm text-gray-700">
         Don’t have an account?{' '}
         <Link to="/register" className="text-blue-600 font-semibold underline hover:text-blue-800">

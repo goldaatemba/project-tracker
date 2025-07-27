@@ -9,7 +9,7 @@ export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   useEffect(() => {
-    fetch(`${config.API_BASE_URL}/projects?featured=true&_limit=3`)
+    fetch(`http://127.0.0.1:5000/projects?featured=true&_limit=3`)
       .then((res) => res.json())
       .then((data) => setFeaturedProjects(data))
       .catch((err) => console.error("Error fetching projects:", err));
@@ -17,7 +17,6 @@ export default function Home() {
 
   return (
     <section className="bg-gradient-to-b from-blue-50 via-white to-gray-100 text-gray-800">
-      {/* Intro CTA */}
       <div className="min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center">
         <motion.div
           initial={{ y: -30, opacity: 0 }}
@@ -55,7 +54,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
         <motion.div
           initial={{ x: -60, opacity: 0 }}
@@ -97,7 +95,6 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Featured Projects */}
       <div className="bg-gray-100 py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-[#4F9CF9] mb-10">
@@ -144,7 +141,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Admin Footer Note */}
       <div className="bg-[#4F9CF9] text-white text-center py-6 mt-10">
         <p className="text-md">
           Are you an admin?{" "}
