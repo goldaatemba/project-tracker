@@ -44,7 +44,7 @@ function ProjectComments({ projectId }) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ content: newComment }),
+      body: JSON.stringify({ content: newComment, user_id: currentUser.id }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to post comment");
