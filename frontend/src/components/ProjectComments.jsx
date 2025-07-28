@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 const API_URL = import.meta.env.VITE_API_URL;
 
-
 function ProjectComments({ projectId }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -10,25 +9,35 @@ function ProjectComments({ projectId }) {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedContent, setEditedContent] = useState("");
 
-
   useEffect(() => {
+    // Fetch comments for this project
     fetch(`${API_URL}/projects/${projectId}/comments`)
       .then((res) => res.json())
       .then(setComments)
       .catch(() => toast.error("Failed to load comments"));
 
+    // Fetch current user info
     fetch(`${API_URL}/me`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
       .then(setCurrentUser)
       .catch(() => console.error("Could not fetch user"));
   }, [projectId]);
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
+
+    if (!newComment.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+
     fetch(`${API_URL}/projects/${projectId}/comments`, {
       method: "POST",
       headers: {
@@ -37,7 +46,10 @@ function ProjectComments({ projectId }) {
       },
       body: JSON.stringify({ content: newComment }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to post comment");
+        return res.json();
+      })
       .then((comment) => {
         setComments((prev) => [...prev, comment]);
         setNewComment("");
@@ -52,6 +64,11 @@ function ProjectComments({ projectId }) {
   };
 
   const handleSaveEdit = (id) => {
+    if (!editedContent.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+
     fetch(`${API_URL}/comments/${id}`, {
       method: "PUT",
       headers: {
@@ -60,7 +77,10 @@ function ProjectComments({ projectId }) {
       },
       body: JSON.stringify({ content: editedContent }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
       .then((updatedComment) => {
         setComments((prev) =>
           prev.map((c) => (c.id === id ? updatedComment : c))
@@ -79,7 +99,8 @@ function ProjectComments({ projectId }) {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
-      .then(() => {
+      .then((res) => {
+        if (!res.ok) throw new Error();
         setComments((prev) => prev.filter((c) => c.id !== id));
         toast.success("Comment deleted");
       })
