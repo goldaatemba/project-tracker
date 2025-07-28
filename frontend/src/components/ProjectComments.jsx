@@ -10,13 +10,13 @@ function ProjectComments({ projectId }) {
   const [editedContent, setEditedContent] = useState("");
 
   useEffect(() => {
-    // Fetch comments for this project
+    // Fetch comments
     fetch(`${API_URL}/projects/${projectId}/comments`)
       .then((res) => res.json())
       .then(setComments)
       .catch(() => toast.error("Failed to load comments"));
 
-    // Fetch current user info
+    // Fetch current user
     fetch(`${API_URL}/me`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -35,6 +35,11 @@ function ProjectComments({ projectId }) {
 
     if (!newComment.trim()) {
       toast.error("Comment cannot be empty");
+      return;
+    }
+
+    if (!currentUser?.id) {
+      toast.error("User not authenticated");
       return;
     }
 
@@ -204,3 +209,4 @@ function ProjectComments({ projectId }) {
 }
 
 export default ProjectComments;
+
