@@ -19,7 +19,7 @@ function ProjectComments({ projectId }) {
     // Fetch current user
     fetch(`${API_URL}/me`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     })
       .then((res) => {
@@ -47,7 +47,7 @@ function ProjectComments({ projectId }) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
       body: JSON.stringify({ content: newComment, user_id: currentUser.id }),
     })
@@ -78,7 +78,7 @@ function ProjectComments({ projectId }) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
       body: JSON.stringify({ content: editedContent }),
     })
@@ -101,7 +101,7 @@ function ProjectComments({ projectId }) {
     fetch(`${API_URL}/comments/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     })
       .then((res) => {
