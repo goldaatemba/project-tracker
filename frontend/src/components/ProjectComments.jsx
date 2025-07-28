@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 const API_URL = import.meta.env.VITE_API_URL;
+const token = localStorage.getItem("access_token");
 
 function ProjectComments({ projectId }) {
   const [comments, setComments] = useState([]);
